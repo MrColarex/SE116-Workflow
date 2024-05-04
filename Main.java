@@ -23,5 +23,7 @@ public class Main {
         }
 
         WorkflowParser.parseWorkflow(workflowFile, jobFile);
+        
+        System.out.println("it is done");
     }
 }
