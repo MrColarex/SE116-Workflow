@@ -14,63 +14,70 @@ public class WorkflowParser {
              BufferedWriter bw = new BufferedWriter(new FileWriter(jobFile))) {
 
             String line;
+            int indexOfType = 0;  //indexOfType tells which type are we working on (jobtypes stations or tasktypes.)
+            List<String> taskTypeElements = new ArrayList<>(); // List to store elements of TASKTYPES
+            List<String> jobTypeElements = new ArrayList<>(); // List to store elements of JOBTYPES
+            List<String> stationElements = new ArrayList<>(); // List to store elements of STATIONS
             while ((line = br.readLine()) != null) {
+                line = line.trim(); //Removing spaces at the beginning and at the end
+                if (line.isEmpty()) {
+                    continue; // Skip to the next iteration if line is empty
+                } 
                 // Check if the line represents task types
-                if (line.startsWith("(TASKTYPES")) {
-                    List<TaskType> taskTypes = parseTaskTypes(line);
-                    List<TaskType> validTaskTypes = new ArrayList<>();
+                if (line.startsWith("(JOBTYPES")) 
+                    indexOfType = 1;
+                if (line.startsWith("(STATIONS")) 
+                     indexOfType = 2;
 
-                    for (TaskType taskType : taskTypes) {
-                        if (taskType.getDefaultTaskSize() >= 0) {
-                            validTaskTypes.add(taskType);
-                        } else {
-                            System.out.println(taskType.getTaskTypeID() + " default task size was negative. Converted to positive.");
-                            // Convert negative default task sizes to positive
-                            taskType.setDefaultTaskSize(Math.abs(taskType.getDefaultTaskSize()));
-                            validTaskTypes.add(taskType);
-                        }
+                if (indexOfType == 0) {
+                    String[] elements = line.split(" ");
+                    for (String element : elements) {
+                        taskTypeElements.add(element); // Add elements to the TASKTYPES list
                     }
-
-                    // Update task types list
-                    taskTypes = validTaskTypes;
-
-                    // Write updated task types to jobs.txt
-                    bw.write("(TASKTYPES ");
-                    for (TaskType taskType : taskTypes) {
-                        bw.write(taskType.getTaskTypeID() + " " + taskType.getDefaultTaskSize() + " ");
+                }
+                if (indexOfType == 1) {   
+                    String[] elements = line.split(" ");
+                    for (String element : elements) {
+                        jobTypeElements.add(element); // Add elements to the JOBTYPES list
                     }
-                    bw.write(")");
-                    bw.newLine();
-                } else {
-                    // If not task types, simply copy the line to jobs.txt
-                    bw.write(line);
-                    bw.newLine();
+                }
+                if (indexOfType == 2) {   
+                    String[] elements = line.split(" ");
+                    for (String element : elements) {
+                        stationElements.add(element); // Add elements to the STATIONS list
+                    }
                 }
             }
 
-            System.out.println("Workflow copied to jobs.txt successfully.");
-        } catch (IOException e) {
-            System.out.println("Error reading or writing files: " + e.getMessage());
-        }
-    }
+            // Remove the first element "TASKTYPES"
+            taskTypeElements.remove(0);
 
-    // Helper method to parse task types from a line
-    private static List<TaskType> parseTaskTypes(String line) {
-        List<TaskType> taskTypes = new ArrayList<>();
-        // Assuming task types are represented as "(TASKTYPES T1 1 T2 2 ...)"
-        String[] parts = line.split("\\s+");
-        for (int i = 1; i < parts.length; i += 2) {
-            String taskTypeID = parts[i];
-            String sizeString = parts[i + 1];
-            double defaultTaskSize;
-            try {
-                defaultTaskSize = Double.parseDouble(sizeString);
-                taskTypes.add(new TaskType(taskTypeID, defaultTaskSize));
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Invalid default task size for TaskType " + taskTypeID);
-                // You can handle this error as needed, e.g., skip this TaskType or mark it as invalid
+            // Remove parentheses from the first and last strings
+            if (!taskTypeElements.isEmpty()) {
+                String firstElement = taskTypeElements.get(0);
+                if (firstElement.startsWith("(")) {
+                    taskTypeElements.set(0, firstElement.substring(1)); // Remove the opening parenthesis
+                }
+                String lastElement = taskTypeElements.get(taskTypeElements.size() - 1);
+                if (lastElement.endsWith(")")) {
+                    taskTypeElements.set(taskTypeElements.size() - 1, lastElement.substring(0, lastElement.length() - 1)); // Remove the closing parenthesis
+                }
             }
+            // Print accumulated elements
+            System.out.println("TASKTYPES Elements:");
+            for (String element : taskTypeElements) {
+                System.out.println(element);
+            }
+            System.out.println("Now we will create and print TaskType objects.");
+
+            //Code to create TaskType objects while checking for errors.
+            for (String element : taskTypeElements) {
+
+            }
+
+        } 
+        catch (Exception e) {
+            System.out.println("create message here");
         }
-        return taskTypes;
     }
 }
