@@ -1,4 +1,5 @@
-import java.io.File;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,15 +16,37 @@ public class Main {
             System.out.println("Error: Workflow file does not exist or is not accessible.");
             return;
         }
-        
+
         File jobFile = new File(outputFilePath);
         if (!jobFile.exists() || !jobFile.canRead()) {
             System.out.println("Error: Job file does not exist or is not accessible.");
             return;
         }
 
-        WorkflowParser.parseWorkflow(workflowFile, jobFile);
-        
-        System.out.println("it is done");
+
+        // İş dosyasını ayrıştır
+        String jobFilename = "jobs.txt";
+        List<Job> jobs = JobParser.parseJobFile(jobFilename);
+        try {
+            BufferedReader  bufferedReader= new BufferedReader(new FileReader(jobFilename));
+            System.out.println(bufferedReader.readLine());
+            bufferedReader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Ayrıştırılan işleri yazdır
+        for (Job job : jobs) {
+            System.out.println("Job ID: " + job.getJobID());
+            System.out.println("Job Type ID: " + job.getJobType());
+            System.out.println("Start Time: " + job.getStartTime());
+            System.out.println("Duration: " + job.getDuration());
+            System.out.println();
+        }
+
+
+
     }
+
+
 }

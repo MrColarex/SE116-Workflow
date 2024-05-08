@@ -1,11 +1,14 @@
+import java.util.List;
+
 public class Job {
     private String jobID;
+    private int startTime;
     private int duration;
-    private JobType jobType;
-    private int startTime; // Changed from List<Task> tasks to int startTime
+    private String jobType;
+    private List<Task> tasks;
 
     // Constructor
-    public Job(String jobID, int duration, JobType jobType, int startTime) {
+    public Job(String jobID, String jobType, int duration, int startTime) {
         this.jobID = jobID;
         this.duration = duration;
         this.jobType = jobType;
@@ -29,14 +32,26 @@ public class Job {
         this.duration = duration;
     }
 
-    public JobType getJobType() {
+    public String getJobType() {
         return jobType;
     }
 
-    public void setJobType(JobType jobType) {
+    public void setJobType(String jobType) {
         this.jobType = jobType;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    // Method to add tasks to the job
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
     public int getStartTime() {
         return startTime;
     }
