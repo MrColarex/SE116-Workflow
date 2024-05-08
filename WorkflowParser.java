@@ -24,6 +24,8 @@ public class WorkflowParser {
                     continue; // Skip to the next iteration if line is empty
                 } 
                 // Check if the line represents task types
+                if (line.startsWith("(TASKTYPES")) 
+                    indexOfType = 0; // Set indexOfType to 0 for TASKTYPES
                 if (line.startsWith("(JOBTYPES")) 
                     indexOfType = 1;
                 if (line.startsWith("(STATIONS")) 
@@ -70,14 +72,31 @@ public class WorkflowParser {
             }
             System.out.println("Now we will create and print TaskType objects.");
 
-            //Code to create TaskType objects while checking for errors.
+            // List to store TaskType objects
+            List<Task> taskTypes = new ArrayList<>();
+            System.out.println("Hello World");
+            // Code to create TaskType objects while checking for errors
+            // Code to create TaskType objects while checking for errors
             for (String element : taskTypeElements) {
-
+                try {
+                    String[] parts = element.split(":");
+                    String taskTypeID = parts[0];
+                    double defaultTaskSize = Double.parseDouble(parts[1]);
+                    Task taskType = new Task(taskTypeID, defaultTaskSize);
+                    taskTypes.add(taskType); // Fix: changed Task to taskType
+                    System.out.println("Created TaskType object: " + taskType.getTaskID() + " - Default Task Size: " + taskType.getTaskSize()); // Fix: changed Task to taskType
+                } catch (Exception e) {
+                    System.err.println("Error creating TaskType object from element: " + element);
+                    // Log or handle the error as needed
+                }
             }
 
+
+            // Now taskTypes list contains all created TaskType objects
+
         } 
-        catch (Exception e) {
-            System.out.println("create message here");
+        catch (IOException e) {
+            System.err.println("Error reading the workflow file: " + e.getMessage());
         }
     }
 }
