@@ -24,19 +24,34 @@ public class Main {
         }
 
 
+        System.out.println("----------");
+        System.out.println("----------");
+        System.out.println("----------");
+
         // İş dosyasını ayrıştır
         String jobFilename = "jobs.txt";
         List<Job> jobs = JobParser.parseJobFile(jobFilename);
+        System.out.println("----------");
+        System.out.println("----------");
+        System.out.println("----------");
+        System.out.println();
         try {
-            BufferedReader  bufferedReader= new BufferedReader(new FileReader(jobFilename));
-            System.out.println(bufferedReader.readLine());
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(jobFilename));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
             bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("----------");
+        System.out.println("----------");
+        System.out.println("----------");
 
         // Ayrıştırılan işleri yazdır
         for (Job job : jobs) {
+            System.out.println();
             System.out.println("Job ID: " + job.getJobID());
             System.out.println("Job Type ID: " + job.getJobType());
             System.out.println("Start Time: " + job.getStartTime());

@@ -1,12 +1,10 @@
 public class Task {
     private String taskID;
-    private TaskType taskType;
-    private int taskSize;
+    private double taskSize; // Modified to double
 
     // Constructor
-    public Task(String taskID, TaskType taskType, int taskSize) {
+    public Task(String taskID, double taskSize) { // Modified parameter to double
         this.taskID = taskID;
-        this.taskType = taskType;
         this.taskSize = taskSize;
     }
 
@@ -19,19 +17,11 @@ public class Task {
         this.taskID = taskID;
     }
 
-    public TaskType getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
-    }
-
-    public int getTaskSize() {
+    public double getTaskSize() { // Modified return type to double
         return taskSize;
     }
 
-    public void setTaskSize(int taskSize) {
+    public void setTaskSize(double taskSize) { // Modified parameter type to double
         this.taskSize = taskSize;
     }
 }
