@@ -1,17 +1,15 @@
-import java.util.List;
-
 public class Job {
     private String jobID;
     private int duration;
     private JobType jobType;
-    private List<Task> tasks;
+    private int startTime; // Changed from List<Task> tasks to int startTime
 
     // Constructor
-    public Job(String jobID, int duration, JobType jobType, List<Task> tasks) {
+    public Job(String jobID, int duration, JobType jobType, int startTime) {
         this.jobID = jobID;
         this.duration = duration;
         this.jobType = jobType;
-        this.tasks = tasks;
+        this.startTime = startTime;
     }
 
     // Getters and setters
@@ -39,16 +37,11 @@ public class Job {
         this.jobType = jobType;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public int getStartTime() {
+        return startTime;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    // Method to add tasks to the job
-    public void addTask(Task task) {
-        tasks.add(task);
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 }
