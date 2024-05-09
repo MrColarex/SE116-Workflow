@@ -4,11 +4,11 @@ public class Station {
     private String stationID;
     private int capacity;
     private double speed;
-    private List<TaskType> taskTypesHandled;
+    private List<Task> taskTypesHandled;
     boolean canHandleMultipleTasks;
 
     // Constructor
-    public Station(String stationID, int capacity, boolean canHandleMultipleTasks, double speed, List<TaskType> taskTypesHandled) {
+    public Station(String stationID, int capacity, boolean canHandleMultipleTasks, double speed, List<Task> taskTypesHandled) {
         this.stationID = stationID;
         this.capacity = capacity;
         this.canHandleMultipleTasks = canHandleMultipleTasks;
@@ -42,11 +42,11 @@ public class Station {
         this.speed = speed;
     }
 
-    public List<TaskType> getTaskTypesHandled() {
+    public List<Task> getTaskTypesHandled() {
         return taskTypesHandled;
     }
 
-    public void setTaskTypesHandled(List<TaskType> taskTypesHandled) {
+    public void setTaskTypesHandled(List<Task> taskTypesHandled) {
         this.taskTypesHandled = taskTypesHandled;
     }
     public boolean canHandleMultipleTasks() {
@@ -55,7 +55,7 @@ public class Station {
     
 
     // Method to check if a station can handle a specific task type
-    public boolean canHandleTaskType(TaskType taskType) {
+    public boolean canHandleTaskType(Task taskType) {
         return taskTypesHandled.contains(taskType);
     }
 

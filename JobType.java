@@ -2,10 +2,10 @@ import java.util.List;
 
 public class JobType {
     private String jobTypeID;
-    private List<TaskType> tasksSequence;
+    private List<Task> tasksSequence;
 
     // Constructor
-    public JobType(String jobTypeID, List<TaskType> tasksSequence) {
+    public JobType(String jobTypeID, List<Task> tasksSequence) {
         this.jobTypeID = jobTypeID;
         this.tasksSequence = tasksSequence;
     }
@@ -19,11 +19,11 @@ public class JobType {
         this.jobTypeID = jobTypeID;
     }
 
-    public List<TaskType> getTasksSequence() {
+    public List<Task> getTasksSequence() {
         return tasksSequence;
     }
 
-    public void setTasksSequence(List<TaskType> tasksSequence) {
+    public void setTasksSequence(List<Task> tasksSequence) {
         this.tasksSequence = tasksSequence;
     }
 }
