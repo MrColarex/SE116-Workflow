@@ -9,11 +9,12 @@ import java.io.File;
 
 public class WorkflowParser {
 
-    public static void parseWorkflow(File workflowFile, File jobFile) {
-        try (BufferedReader br = new BufferedReader(new FileReader(workflowFile));
-             BufferedWriter bw = new BufferedWriter(new FileWriter(jobFile))) {
+    public static void parseWorkflow(File workflowFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(workflowFile));) {
 
             String line;
+            String currentTaskID = null;
+            double currentTaskSize = 0;
             int indexOfType = 0;  //indexOfType tells which type are we working on (jobtypes stations or tasktypes.)
             List<String> taskTypeElements = new ArrayList<>(); // List to store elements of TASKTYPES
             List<String> jobTypeElements = new ArrayList<>(); // List to store elements of JOBTYPES
@@ -73,30 +74,43 @@ public class WorkflowParser {
             System.out.println("Now we will create and print TaskType objects.");
 
             // List to store TaskType objects
-            List<Task> taskTypes = new ArrayList<>();
-            System.out.println("Hello World");
+            List<Task> tasks = new ArrayList<>();
             // Code to create TaskType objects while checking for errors
             // Code to create TaskType objects while checking for errors
             for (String element : taskTypeElements) {
                 try {
-                    String[] parts = element.split(":");
-                    String taskTypeID = parts[0];
-                    double defaultTaskSize = Double.parseDouble(parts[1]);
-                    Task taskType = new Task(taskTypeID, defaultTaskSize);
-                    taskTypes.add(taskType); // Fix: changed Task to taskType
-                    System.out.println("Created TaskType object: " + taskType.getTaskID() + " - Default Task Size: " + taskType.getTaskSize()); // Fix: changed Task to taskType
-                } catch (Exception e) {
-                    System.err.println("Error creating TaskType object from element: " + element);
-                    // Log or handle the error as needed
+                    // Try to parse the element as a double
+                    double size = Double.parseDouble(element);
+            
+                    // Update current task ID
+                    if (currentTaskID != null) {
+                        tasks.add(new Task(currentTaskID, size));
+                        System.out.println("Created Task object: ID=" + currentTaskID + ", Size=" + size);
+                    }
+            
+                    // Reset current task ID
+                    currentTaskID = null;
+                } catch (NumberFormatException e) {
+                    // If parsing as a double fails, assume it's a task ID
+                    if (currentTaskID != null) {
+                        // Assuming size 0 for the current task if size is not explicitly provided
+                        tasks.add(new Task(currentTaskID, 0));
+                        System.out.println("Created Task object: ID=" + currentTaskID + ", Size=0");
+                    }
+                    currentTaskID = element;
                 }
             }
-
-
-            // Now taskTypes list contains all created TaskType objects
-
-        } 
-        catch (IOException e) {
-            System.err.println("Error reading the workflow file: " + e.getMessage());
-        }
+            
+            // Add the last task if it exists
+            if (currentTaskID != null) {
+                // Assuming size 0 for the last task if size is not explicitly provided
+                tasks.add(new Task(currentTaskID, 0));
+                System.out.println("Created Task object: ID=" + currentTaskID + ", Size=0");
+            }
+            
+            
+    } catch (IOException e) {
+        System.err.println("Error reading the workflow file: " + e.getMessage());
+    }
     }
 }

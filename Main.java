@@ -22,7 +22,8 @@ public class Main {
             System.out.println("Error: Job file does not exist or is not accessible.");
             return;
         }
-
+		
+        WorkflowParser.parseWorkflow(workflowFile);
 
         System.out.println("----------");
         System.out.println("----------");
