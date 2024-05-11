@@ -9,10 +9,8 @@ import java.util.List;
 public class JobTypeParser {
     public static List<JobType> parseWorkflow(File workflowFile) {
         String line;
-        String currentTaskID = null;
 
         List<String> jobTypeElements = new ArrayList<>(); // List to store elements of JOBTYPES
-        List<JobType> jobs = new ArrayList<>();
 
         int indexOfType = 0; //indexOfType tells which type are we working on (jobtypes stations or tasktypes.)
 

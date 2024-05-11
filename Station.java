@@ -2,22 +2,23 @@ import java.util.List;
 
 public class Station {
     private String stationID;
-    private int capacity;
-    private double speed;
-    private List<Task> taskTypesHandled;
-    boolean canHandleMultipleTasks;
-
+    private int maxCapacity;
+    private boolean multiflag;
+    private boolean fifoflag;
+    private double stationSpeed;
+    private double speedVariabilityPercentage;
+    
     // Constructor
-    public Station(String stationID, int capacity, boolean canHandleMultipleTasks, double speed, List<Task> taskTypesHandled) {
+    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, double stationSpeed, double speedVariabilityPercentage) {
         this.stationID = stationID;
-        this.capacity = capacity;
-        this.canHandleMultipleTasks = canHandleMultipleTasks;
-        this.speed = speed;
-        this.taskTypesHandled = taskTypesHandled;
+        this.maxCapacity = maxCapacity;
+        this.multiflag = multiflag;
+        this.fifoflag = fifoflag;
+        this.stationSpeed = stationSpeed;
+        this.speedVariabilityPercentage = speedVariabilityPercentage;
     }
     
-
-    // Getters and setters
+    // Getters and Setters
     public String getStationID() {
         return stationID;
     }
@@ -26,41 +27,43 @@ public class Station {
         this.stationID = stationID;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getMaxCapacity() {
+        return maxCapacity;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 
-    public double getSpeed() {
-        return speed;
+    public boolean isMultiflag() {
+        return multiflag;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void setMultiflag(boolean multiflag) {
+        this.multiflag = multiflag;
     }
 
-    public List<Task> getTaskTypesHandled() {
-        return taskTypesHandled;
+    public boolean isFifoflag() {
+        return fifoflag;
     }
 
-    public void setTaskTypesHandled(List<Task> taskTypesHandled) {
-        this.taskTypesHandled = taskTypesHandled;
-    }
-    public boolean canHandleMultipleTasks() {
-        return this.canHandleMultipleTasks;
-    }
-    
-
-    // Method to check if a station can handle a specific task type
-    public boolean canHandleTaskType(Task taskType) {
-        return taskTypesHandled.contains(taskType);
+    public void setFifoflag(boolean fifoflag) {
+        this.fifoflag = fifoflag;
     }
 
-    // Method to execute tasks at the station, considering speed and capacity
-    public void executeTask(Task task) {
-        // Implementation of task execution
+    public double getStationSpeed() {
+        return stationSpeed;
+    }
+
+    public void setStationSpeed(double stationSpeed) {
+        this.stationSpeed = stationSpeed;
+    }
+
+    public double getSpeedVariabilityPercentage() {
+        return speedVariabilityPercentage;
+    }
+
+    public void setSpeedVariabilityPercentage(double speedVariabilityPercentage) {
+        this.speedVariabilityPercentage = speedVariabilityPercentage;
     }
 }

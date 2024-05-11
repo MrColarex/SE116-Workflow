@@ -21,7 +21,7 @@ public class StationParser {
                 }
                 // Check if the line represents task types
                 if (line.startsWith("(STATIONS"))
-                    indexOfType = 2; // Set indexOfType to 0 for STATIONS
+                    indexOfType = 2; // Set indexOfType to 2 for STATIONS
     
 
                 if (indexOfType == 2) {
@@ -33,7 +33,7 @@ public class StationParser {
                 
             }
 
-            // Remove the first element "STATIONS"
+            // Remove the first and last element "STATIONS"
             stationElements.remove(0);
             stationElements.remove(stationElements.size() - 1);
 
@@ -42,6 +42,8 @@ public class StationParser {
             for (String element : stationElements) {
                 System.out.println(element);
             }
+
+            
 
 
 
