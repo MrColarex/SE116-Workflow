@@ -5,21 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 
-public class WorkflowParser {
+public class TaskParser {
 
-    public static List<Task> parseWorkflow(File workflowFile) {
+    public static List<Task> parseTasks(File workflowFile) {
         String line;
         String currentTaskID = null;
         int indexOfType = 0; //indexOfType tells which type are we working on (jobtypes stations or tasktypes.)
         List<String> taskTypeElements = new ArrayList<>(); // List to store elements of TASKTYPES
-        List<String> jobTypeElements = new ArrayList<>(); // List to store elements of JOBTYPES
-        List<String> stationElements = new ArrayList<>(); // List to store elements of STATIONS
         List<Task> tasks = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(workflowFile))) {
             
             
             while ((line = br.readLine()) != null) {
+                if (line.startsWith("(JOBTYPES"))
+                    indexOfType = 1;
                 line = line.trim(); // Removing spaces at the beginning and at the end
                 if (line.isEmpty()) {
                     continue; // Skip to the next iteration if line is empty
@@ -27,10 +27,7 @@ public class WorkflowParser {
                 // Check if the line represents task types
                 if (line.startsWith("(TASKTYPES"))
                     indexOfType = 0; // Set indexOfType to 0 for TASKTYPES
-                if (line.startsWith("(JOBTYPES"))
-                    indexOfType = 1;
-                if (line.startsWith("(STATIONS"))
-                    indexOfType = 2;
+    
 
                 if (indexOfType == 0) {
                     String[] elements = line.split(" ");
@@ -38,18 +35,7 @@ public class WorkflowParser {
                         taskTypeElements.add(element); // Add elements to the TASKTYPES list
                     }
                 }
-                if (indexOfType == 1) {
-                    String[] elements = line.split(" ");
-                    for (String element : elements) {
-                        jobTypeElements.add(element); // Add elements to the JOBTYPES list
-                    }
-                }
-                if (indexOfType == 2) {
-                    String[] elements = line.split(" ");
-                    for (String element : elements) {
-                        stationElements.add(element); // Add elements to the STATIONS list
-                    }
-                }
+
             }
             // Remove the first element "TASKTYPES"
             taskTypeElements.remove(0);
@@ -88,7 +74,6 @@ public class WorkflowParser {
                     currentTaskID = element;
                 }
             }
-
             // Add the last task if it exists
             if (currentTaskID != null) {
                 // Assuming size 0 for the last task if size is not explicitly provided
