@@ -71,6 +71,8 @@ public class Main {
             System.out.println();
         }
         System.out.println("----------");
+        StationParser parser = new StationParser();
+        parser.parseStations(workflowFile);
 
     }
 }

@@ -18,15 +18,13 @@ public class TaskParser {
             
             
             while ((line = br.readLine()) != null) {
-                if (line.startsWith("(JOBTYPES"))
-                    indexOfType = 1;
                 line = line.trim(); // Removing spaces at the beginning and at the end
                 if (line.isEmpty()) {
                     continue; // Skip to the next iteration if line is empty
                 }
                 // Check if the line represents task types
-                if (line.startsWith("(TASKTYPES"))
-                    indexOfType = 0; // Set indexOfType to 0 for TASKTYPES
+                if (line.startsWith("(JOBTYPES"))
+                    indexOfType = 1; // This stops the parsing of tasks once jobtypes starts
     
 
                 if (indexOfType == 0) {
