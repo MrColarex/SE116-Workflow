@@ -25,7 +25,7 @@ public class JobParser {
 
                 // Extract jobID, jobTypeID, startTime, and duration
                 String jobID = parts[0];
-                String jobTypeID = parts[1];
+                JobType jobTypeID = JobType.valueOf(parts[1]);
                 int duration;
                 int startTime;
                 try {

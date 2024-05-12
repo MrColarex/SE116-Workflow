@@ -10,6 +10,15 @@ public class JobType {
         this.tasksSequence = tasksSequence;
     }
 
+    public static JobType valueOf(String part) {
+        return new JobType(part, null);
+    }
+
+    @Override
+    public String toString() {
+        return jobTypeID;
+    }
+
     // Getters and setters
     public String getJobTypeID() {
         return jobTypeID;

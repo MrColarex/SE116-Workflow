@@ -4,11 +4,11 @@ public class Job {
     private String jobID;
     private int startTime;
     private int duration;
-    private String jobType;
+    private JobType jobType;
     private List<Task> tasks;
 
     // Constructor
-    public Job(String jobID, String jobType, int duration, int startTime) {
+    public Job(String jobID, JobType jobType, int duration, int startTime) {
         this.jobID = jobID;
         this.duration = duration;
         this.jobType = jobType;
@@ -32,11 +32,11 @@ public class Job {
         this.duration = duration;
     }
 
-    public String getJobType() {
+    public JobType getJobType() {
         return jobType;
     }
 
-    public void setJobType(String jobType) {
+    public void setJobType(JobType jobType) {
         this.jobType = jobType;
     }
 
@@ -47,6 +47,8 @@ public class Job {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+
 
     // Method to add tasks to the job
     public void addTask(Task task) {
