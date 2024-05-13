@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Station {
     private String stationID;
     private int maxCapacity;
@@ -7,15 +5,17 @@ public class Station {
     private boolean fifoflag;
     private double stationSpeed;
     private double speedVariabilityPercentage;
-    
+    private String status;
+
     // Constructor
-    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, double stationSpeed, double speedVariabilityPercentage) {
+    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, double stationSpeed, double speedVariabilityPercentage, String status) {
         this.stationID = stationID;
         this.maxCapacity = maxCapacity;
         this.multiflag = multiflag;
         this.fifoflag = fifoflag;
         this.stationSpeed = stationSpeed;
         this.speedVariabilityPercentage = speedVariabilityPercentage;
+        this.status = status;
     }
     
     // Getters and Setters
@@ -65,5 +65,13 @@ public class Station {
 
     public void setSpeedVariabilityPercentage(double speedVariabilityPercentage) {
         this.speedVariabilityPercentage = speedVariabilityPercentage;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
