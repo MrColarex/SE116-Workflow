@@ -1,77 +1,83 @@
+import java.util.List;
+
 public class Station {
     private String stationID;
     private int maxCapacity;
     private boolean multiflag;
     private boolean fifoflag;
-    private double stationSpeed;
-    private double speedVariabilityPercentage;
+    private List<Task> tasksCanBeDone;
+    private List<Double> speedForTask;
+    private List<Double> speedVariabilityMultiplier;
     private String status;
 
     // Constructor
-    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, double stationSpeed, double speedVariabilityPercentage, String status) {
+    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag,
+                   List<Task> tasksCanBeDone, List<Double> speedForTask, List<Double> speedVariabilityMultiplier,
+                   String status) {
         this.stationID = stationID;
         this.maxCapacity = maxCapacity;
         this.multiflag = multiflag;
         this.fifoflag = fifoflag;
-        this.stationSpeed = stationSpeed;
-        this.speedVariabilityPercentage = speedVariabilityPercentage;
+        this.tasksCanBeDone = tasksCanBeDone;
+        this.speedForTask = speedForTask;
+        this.speedVariabilityMultiplier = speedVariabilityMultiplier;
         this.status = status;
     }
-    
-    // Getters and Setters
+
+    // Getter methods
     public String getStationID() {
         return stationID;
-    }
-
-    public void setStationID(String stationID) {
-        this.stationID = stationID;
     }
 
     public int getMaxCapacity() {
         return maxCapacity;
     }
 
-    public void setMaxCapacity(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
-
     public boolean isMultiflag() {
         return multiflag;
-    }
-
-    public void setMultiflag(boolean multiflag) {
-        this.multiflag = multiflag;
     }
 
     public boolean isFifoflag() {
         return fifoflag;
     }
 
-    public void setFifoflag(boolean fifoflag) {
-        this.fifoflag = fifoflag;
+    public List<Task> getTasksCanBeDone() {
+        return tasksCanBeDone;
     }
 
-    public double getStationSpeed() {
-        return stationSpeed;
+    public List<Double> getSpeedForTask() {
+        return speedForTask;
     }
 
-    public void setStationSpeed(double stationSpeed) {
-        this.stationSpeed = stationSpeed;
+    public List<Double> getSpeedVariabilityMultiplier() {
+        return speedVariabilityMultiplier;
     }
 
-    public double getSpeedVariabilityPercentage() {
-        return speedVariabilityPercentage;
-    }
-
-    public void setSpeedVariabilityPercentage(double speedVariabilityPercentage) {
-        this.speedVariabilityPercentage = speedVariabilityPercentage;
-    }
-    
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    // Method to get a view of the station
+    public String getView() {
+        String view = "Station ID: " + stationID + "\n" +
+                      "Max Capacity: " + maxCapacity + "\n" +
+                      "Multiflag: " + multiflag + "\n" +
+                      "FIFOflag: " + fifoflag + "\n" +
+                      "Tasks that can be done: ";
+    
+        // Append task names individually
+        for (int i = 0; i < tasksCanBeDone.size(); i++) {
+            if (i > 0) {
+                view += ", ";
+            }
+            view += tasksCanBeDone.get(i).getTaskID();
+        }
+    
+        view += "\nSpeed for Task: " + speedForTask + "\n" +
+                "Speed Variability Multiplier: " + speedVariabilityMultiplier + "\n" +
+                "Status: " + status + "\n";
+    
+        return view;
     }
+    
 }

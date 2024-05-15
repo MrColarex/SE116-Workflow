@@ -89,7 +89,10 @@ public class Main {
             System.out.println();
         }
         System.out.println("----------");
-
+        
+        for (Station station : stations) {
+            System.out.println(station.getView());
+        }
 
     }
 }

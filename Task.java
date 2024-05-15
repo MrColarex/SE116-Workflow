@@ -24,4 +24,9 @@ public class Task {
     public void setTaskSize(double taskSize) { // Modified parameter type to double
         this.taskSize = taskSize;
     }
+    // Override toString method
+    @Override
+    public String toString() {
+        return taskID; // Just return the task ID when converting Task object to String
+    }
 }
