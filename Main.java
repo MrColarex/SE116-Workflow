@@ -23,7 +23,7 @@ public class Main {
             return;
         }
 		
-        TaskParser.parseTasks(workflowFile);
+        List<Task> tasks = TaskParser.parseTasks(workflowFile);
 
 
         System.out.println("----------");
@@ -61,7 +61,6 @@ public class Main {
         //This is for printing Task Objects to make sure it works.
         System.out.println("----------");
         System.out.println("Task Objects:");
-        List<Task> tasks = TaskParser.parseTasks(workflowFile);
         for (Task task : tasks) {
             System.out.println("Task ID: " + task.getTaskID());
             System.out.println("Task Size: " + task.getTaskSize());
@@ -69,11 +68,8 @@ public class Main {
         }
         System.out.println("----------");
         
-        List<Station> stations = StationParser.parseStations(workflowFile);
+        List<Station> stations = StationParser.parseStations(workflowFile, tasks);
 
-        for (Station station : stations) {
-            System.out.println(station);
-        }
         System.out.println("----------");
         System.out.println("Job Type Objects:");
 
