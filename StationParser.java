@@ -25,7 +25,7 @@ public class StationParser {
                     continue; // Skip the current line as it just marks the end of STATIONS
                 }
                 if (isStationSection) {
-                    stations.add(parseStation(line));
+                    stations.add(parseStation(line, tasks)); // Pass the 'tasks' list to the 'parseStation' method
                 }
             }
         } catch (IOException e) {
@@ -34,7 +34,7 @@ public class StationParser {
         return stations;
     }
 
-    private static Station parseStation(String line) {
+    private static Station parseStation(String line, List<Task> allTasks) {
         line = removeTrailingSpacesAndClosingParentheses(line);
         String[] elements = line.split(" ");
         String stationID = elements[0].substring(1);
@@ -46,39 +46,45 @@ public class StationParser {
         List<Double> speedForTask = new ArrayList<>();
         List<Double> speedVariabilityMultiplier = new ArrayList<>();
     
-        String currentTaskID = null;
-        double currentTaskSize = 0.0;
-    
         for (int i = 4; i < elements.length; i++) {
-            String element = elements[i];
-            try {
-                // Try to parse the element as a double (task size)
-                double value = Double.parseDouble(element);
-    
-                // If a task ID is already parsed, add it with its size and speed multiplier
-                if (currentTaskID != null) {
-                    tasksCanBeDone.add(new Task(currentTaskID, currentTaskSize));
-                    speedForTask.add(currentTaskSize);
-                    speedVariabilityMultiplier.add(value); // Assign the parsed value as speed multiplier
-                    currentTaskID = null; // Reset current task ID
+            // Check if the element is a task ID by trying to find it in the allTasks list
+            Task task = findTaskByID(elements[i], allTasks);
+            if (task != null) {
+                // If it's a task ID, add the task to the tasksCanBeDone list
+                tasksCanBeDone.add(task);
+                // The next element should be the speed for this task
+                i++;
+                speedForTask.add(Double.parseDouble(elements[i]));
+                // Check if there's a speed multiplier following the speed
+                if (i + 1 < elements.length && isDouble(elements[i + 1])) {
+                    i++;
+                    speedVariabilityMultiplier.add(Double.parseDouble(elements[i]));
                 } else {
-                    // Update current task size if no task ID is parsed yet
-                    currentTaskSize = value;
+                    // If there's no speed multiplier, use a default value (e.g., 1.0)
+                    speedVariabilityMultiplier.add(0.0);
                 }
-            } catch (NumberFormatException e) {
-                // If parsing as a double fails, assume it's a task ID
-                currentTaskID = element;
             }
         }
     
-        // Add the last task if it exists and has no associated speed multiplier
-        if (currentTaskID != null) {
-            tasksCanBeDone.add(new Task(currentTaskID, currentTaskSize));
-            speedForTask.add(currentTaskSize);
-            speedVariabilityMultiplier.add(0.0); // Assuming default multiplier as 0
-        }
-    
         return new Station(stationID, maxCapacity, multiflag, fifoflag, tasksCanBeDone, speedForTask, speedVariabilityMultiplier, "active");
+    }
+    
+    private static Task findTaskByID(String taskID, List<Task> allTasks) {
+        for (Task task : allTasks) {
+            if (task.getTaskID().equals(taskID)) {
+                return task;
+            }
+        }
+        return null; // Return null if no task with the given ID is found
+    }
+    
+    private static boolean isDouble(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
     
     public static String removeTrailingSpacesAndClosingParentheses(String input) {
@@ -89,9 +95,6 @@ public class StationParser {
         }
         return input;
     }
-    
-    
-    
   
 }
     
