@@ -78,8 +78,12 @@ public class Main {
         System.out.println("Job Type Objects:");
 
         String jobWorkflowFile = "workflow.txt";
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile);
+        List<Task> tasksFromWorkflow = WorkflowParser.parseWorkflow(new File(jobWorkflowFile));
 
+        // Parse job types using the obtained tasks from the workflow file
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile, tasksFromWorkflow);
+
+        // Display job types and their tasks
         for (JobType jobType : jobTypes) {
             System.out.println("JobType ID: " + jobType.getJobTypeID());
             System.out.println("Tasks Sequence:");
@@ -89,7 +93,5 @@ public class Main {
             System.out.println();
         }
         System.out.println("----------");
-
-
     }
 }

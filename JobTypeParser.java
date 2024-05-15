@@ -6,7 +6,7 @@ import java.util.List;
 
 public class JobTypeParser {
 
-    public static List<JobType> parseJobTypes(String filePath) {
+    public static List<JobType> parseJobTypes(String filePath, List<Task> tasksFromWorkflow) {
         List<JobType> jobTypes = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -21,7 +21,7 @@ public class JobTypeParser {
                 } else if (line.startsWith("(STATIONS")) {
                     insideJobTypes = false; // Stop parsing job types if stations part is encountered
                 } else if (insideJobTypes) {
-                    JobType jobType = parseJobType(line);
+                    JobType jobType = parseJobType(line, tasksFromWorkflow);
                     if (jobType != null) {
                         jobTypes.add(jobType);
                     }
@@ -34,7 +34,7 @@ public class JobTypeParser {
         return jobTypes;
     }
 
-    private static JobType parseJobType(String line) {
+    private static JobType parseJobType(String line, List<Task> tasksFromWorkflow) {
         List<Task> tasks = new ArrayList<>();
         line = line.substring(1, line.length() - 1).trim(); // Remove parenthesis from the line and trim any extra spaces
 
@@ -42,7 +42,7 @@ public class JobTypeParser {
         String jobTypeID = parts[0];
         for (int i = 1; i < parts.length; i++) {
             String taskID = parts[i].replaceAll("[^a-zA-Z0-9_]", ""); // Remove any non-alphanumeric characters from task ID
-            double taskSize = 1.0; // Default size
+            double taskSize = findTaskSize(taskID, tasksFromWorkflow);
 
             // Check if the next part is a number to assign as the task size
             if (i + 1 < parts.length && parts[i + 1].matches("\\d+(\\.\\d+)?")) {
@@ -55,6 +55,13 @@ public class JobTypeParser {
         return new JobType(jobTypeID, tasks);
     }
 
-
-
+    private static double findTaskSize(String taskID, List<Task> tasksFromWorkflow) {
+        for (Task task : tasksFromWorkflow) {
+            if (task.getTaskID().equals(taskID)) {
+                return task.getTaskSize();
+            }
+        }
+        // If the task size is not found, return a default size or throw an exception, depending on your requirements
+        return 2.0; // Default size
+    }
 }
