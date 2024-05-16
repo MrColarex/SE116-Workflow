@@ -89,6 +89,37 @@ public class Main {
         for (Station station : stations) {
             System.out.println(station.getView());
         }
+        for (Job job : jobs) {
+            System.out.println("Job ID: " + job.getJobID());
+            System.out.println("Job Start Time: " + job.getStartTime());
+            System.out.println("Job Duration: " + job.getDuration());
 
+            // Şu anki zamanı simüle edelim (örneğin, iş başlama zamanı)
+            int currentTime = job.getStartTime();
+
+            // İşin durumunu güncelleyelim (örneğin, iş başlama zamanı)
+            job.updateStatus(currentTime);
+
+            // İşin tamamlanma durumunu kontrol edelim
+            if (job.isCompleted()) {
+                System.out.println("Job is completed.");
+            } else {
+                System.out.println("Job is still in progress.");
+            }
+
+            // Eğer iş tamamlanmadıysa, işin bitiş zamanına ne kadar kaldığını gösterelim
+            if (!job.isCompleted()) {
+                int timeRemaining = job.getEndTime() - currentTime;
+                System.out.println("Time remaining for job completion: " + timeRemaining);
+            }
+            
+            // İşin bitiş zamanı geçmişse, işin ne kadar geç tamamlandığını gösterelim
+            if (currentTime > job.getEndTime()) {
+                int timeAfterDeadline = job.getTimeAfterDeadline(currentTime);
+                System.out.println("Job completed " + timeAfterDeadline + " units after deadline.");
+            }
+            
+            System.out.println();
+        }
     }
 }
