@@ -74,7 +74,7 @@ public class Main {
         System.out.println("Job Type Objects:");
 
         String jobWorkflowFile = "workflow.txt";
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile);
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile, tasks);
 
         for (JobType jobType : jobTypes) {
             System.out.println("JobType ID: " + jobType.getJobTypeID());
