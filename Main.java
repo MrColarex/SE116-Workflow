@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello world.");
         if (args.length != 2) {
             System.out.println("Usage: java Main <workflow_file_path> <output_file_path>");
             return;
@@ -12,43 +11,39 @@ public class Main {
         String workflowFilePath = args[0];
         String outputFilePath = args[1];
 
+        // Check if workflow file exists and is readable
         File workflowFile = new File(workflowFilePath);
         if (!workflowFile.exists() || !workflowFile.canRead()) {
             System.out.println("Error: Workflow file does not exist or is not accessible.");
             return;
         }
 
+        // Check if job file exists and is readable
         File jobFile = new File(outputFilePath);
         if (!jobFile.exists() || !jobFile.canRead()) {
             System.out.println("Error: Job file does not exist or is not accessible.");
             return;
         }
-		
+
+        // Parse tasks
         List<Task> tasks = TaskParser.parseTasks(workflowFile);
-
-
-        System.out.println("----------");
-
-        // İş dosyasını ayrıştır
-        String jobFilename = args[0];
-        List<Job> jobs = JobParser.parseJobFile(jobFilename);
-
+        // Parse job file
+        List<Job> jobs = JobParser.parseJobFile(outputFilePath);
         System.out.println("----------");
         System.out.println();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(jobFilename));
+
+        // Print job file contents
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFilePath))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
             }
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         System.out.println("----------");
 
-        // Ayrıştırılan işleri yazdır
+        // Print parsed jobs
         for (Job job : jobs) {
             System.out.println();
             System.out.println("Job ID: " + job.getJobID());
@@ -58,8 +53,7 @@ public class Main {
             System.out.println();
         }
 
-
-        //This is for printing Task Objects to make sure it works.
+        // Print parsed tasks
         System.out.println("----------");
         System.out.println("Task Objects:");
         for (Task task : tasks) {
@@ -68,14 +62,14 @@ public class Main {
             System.out.println();
         }
         System.out.println("----------");
-        
+
+        // Parse stations
         List<Station> stations = StationParser.parseStations(workflowFile, tasks);
 
+        // Print parsed job types
         System.out.println("----------");
         System.out.println("Job Type Objects:");
-
-        String jobWorkflowFile = args[1];
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile, tasks);
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(outputFilePath, tasks);
 
         for (JobType jobType : jobTypes) {
             System.out.println("JobType ID: " + jobType.getJobTypeID());
@@ -86,41 +80,44 @@ public class Main {
             System.out.println();
         }
         System.out.println("----------");
-        
+
+        // Print station views
         for (Station station : stations) {
             System.out.println(station.getView());
         }
+
+        // Process and print job details
         for (Job job : jobs) {
             System.out.println("Job ID: " + job.getJobID());
             System.out.println("Job Start Time: " + job.getStartTime());
             System.out.println("Job Duration: " + job.getDuration());
             System.out.println("Job Deadline: " + job.getEndTime());
-           
-            // Şu anki zamanı simüle edelim (örneğin, iş başlama zamanı)
+
+            // Simulate current time (e.g., job start time)
             int currentTime = job.getStartTime();
 
-            // İşin durumunu güncelleyelim (örneğin, iş başlama zamanı)
+            // Update job status
             job.updateStatus(currentTime);
 
-            // İşin tamamlanma durumunu kontrol edelim
+            // Check if job is completed
             if (job.isCompleted()) {
                 System.out.println("Job is completed.");
             } else {
                 System.out.println("Job is still in progress.");
             }
 
-            // Eğer iş tamamlanmadıysa, işin bitiş zamanına ne kadar kaldığını gösterelim
+            // Show remaining time for job completion
             if (!job.isCompleted()) {
                 int timeRemaining = job.getEndTime() - currentTime;
                 System.out.println("Time remaining for job completion: " + timeRemaining);
             }
-            
-            // İşin bitiş zamanı geçmişse, işin ne kadar geç tamamlandığını gösterelim
+
+            // Show how late the job is if past deadline
             if (currentTime > job.getEndTime()) {
                 int timeAfterDeadline = job.getTimeAfterDeadline(currentTime);
                 System.out.println("Job completed " + timeAfterDeadline + " units after deadline.");
             }
-            
+
             System.out.println();
         }
     }
