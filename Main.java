@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello world.");
         if (args.length != 2) {
             System.out.println("Usage: java Main <workflow_file_path> <output_file_path>");
             return;
@@ -30,7 +29,7 @@ public class Main {
         System.out.println("----------");
 
         // İş dosyasını ayrıştır
-        String jobFilename = args[0];
+        String jobFilename = args[1];
         List<Job> jobs = JobParser.parseJobFile(jobFilename);
 
         System.out.println("----------");
@@ -74,7 +73,7 @@ public class Main {
         System.out.println("----------");
         System.out.println("Job Type Objects:");
 
-        String jobWorkflowFile = args[1];
+        String jobWorkflowFile = args[0];
         List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile, tasks);
 
         for (JobType jobType : jobTypes) {
