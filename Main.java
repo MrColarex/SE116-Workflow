@@ -9,7 +9,7 @@ public class Main {
         }
 
         String workflowFilePath = args[0];
-        String outputFilePath = args[1];
+        String jobFilePath = args[1];
 
         // Check if workflow file exists and is readable
         File workflowFile = new File(workflowFilePath);
@@ -18,22 +18,28 @@ public class Main {
             return;
         }
 
-        // Check if job file exists and is readable
-        File jobFile = new File(outputFilePath);
-        if (!jobFile.exists() || !jobFile.canRead()) {
-            System.out.println("Error: Job file does not exist or is not accessible.");
+        // Check if output file exists and is writable
+        File outputFile = new File(jobFilePath);
+        if (!outputFile.exists()) {
+            System.out.println("Error: Jobs file does not exist.");
+            return;
+        } else if (!outputFile.canWrite()) {
+            System.out.println("Error: Jobs file exists but is not writable.");
             return;
         }
+
+        // At this point, both the workflow file and output file are accessible and valid.
+        System.out.println("Both files are ready for processing.");
 
         // Parse tasks
         List<Task> tasks = TaskParser.parseTasks(workflowFile);
         // Parse job file
-        List<Job> jobs = JobParser.parseJobFile(outputFilePath);
+        List<Job> jobs = JobParser.parseJobFile(jobFilePath);
         System.out.println("----------");
         System.out.println();
 
         // Print job file contents
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFilePath))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(jobFilePath))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
@@ -47,7 +53,7 @@ public class Main {
         for (Job job : jobs) {
             System.out.println();
             System.out.println("Job ID: " + job.getJobID());
-            System.out.println("Job Type ID: " + job.getJobType());
+            System.out.println("Job Type ID: " + job.getJobType().getJobTypeID());
             System.out.println("Start Time: " + job.getStartTime());
             System.out.println("Duration: " + job.getDuration());
             System.out.println();
@@ -69,7 +75,7 @@ public class Main {
         // Print parsed job types
         System.out.println("----------");
         System.out.println("Job Type Objects:");
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(outputFilePath, tasks);
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobFilePath, tasks);
 
         for (JobType jobType : jobTypes) {
             System.out.println("JobType ID: " + jobType.getJobTypeID());

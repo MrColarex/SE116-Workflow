@@ -6,8 +6,8 @@ public class Job {
     private int duration;
     private JobType jobType;
     private List<Task> tasks;
-    private int endTime; // İşin bitiş zamanı
-    private boolean completed; // İş tamamlandı mı?
+    private int endTime;
+    private boolean completed; 
 
     // Constructor
     public Job(String jobID, JobType jobType, int duration, int startTime) {
@@ -87,6 +87,6 @@ public class Job {
         } else {
             return Math.max(0, endTime - currentTime); // Zamanı geçen süre, eğer iş tamamlanmadıysa
         }
-        
+
     }
 }
