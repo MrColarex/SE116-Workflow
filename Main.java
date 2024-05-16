@@ -29,7 +29,7 @@ public class Main {
         System.out.println("----------");
 
         // İş dosyasını ayrıştır
-        String jobFilename = "jobs.txt";
+        String jobFilename = args[0];
         List<Job> jobs = JobParser.parseJobFile(jobFilename);
 
         System.out.println("----------");
@@ -73,7 +73,7 @@ public class Main {
         System.out.println("----------");
         System.out.println("Job Type Objects:");
 
-        String jobWorkflowFile = "workflow.txt";
+        String jobWorkflowFile = args[1];
         List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobWorkflowFile, tasks);
 
         for (JobType jobType : jobTypes) {

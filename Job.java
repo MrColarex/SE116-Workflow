@@ -87,5 +87,6 @@ public class Job {
         } else {
             return Math.max(0, endTime - currentTime); // Zamanı geçen süre, eğer iş tamamlanmadıysa
         }
+        
     }
 }
