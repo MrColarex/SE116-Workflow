@@ -105,7 +105,7 @@ public class Station {
    public void selectTasksEDF() {
     if (!fifoflag) { // Check if EDF strategy is specified for the station
         // Sort waiting tasks by deadline
-        waitingTasks.sort(Comparator.comparingInt(Job::getdeadline));
+        waitingTasks.sort(Comparator.comparingInt(Job::getDeadline));
         
         // Move tasks to executing list until max capacity is reached or no more tasks available
         while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
@@ -124,5 +124,4 @@ public class Station {
         updateStatus(); // Update station status after task selection
     }
 
-    
 }

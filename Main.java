@@ -31,13 +31,18 @@ public class Main {
         // At this point, both the workflow file and output file are accessible and valid.
         System.out.println("Both files are ready for processing.");
 
-        // Parse tasks
+        // Parse tasks jobTypes and stations.
         List<Task> tasks = TaskParser.parseTasks(workflowFile);
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(workflowFilePath, tasks);
+        List<Station> stations = StationParser.parseStations(workflowFile, tasks);
+
         // Parse job file
-        List<Job> jobs = JobParser.parseJobFile(jobFilePath);
+        List<Job> jobs = JobParser.parseJobFile(jobFilePath, jobTypes);
+
         System.out.println("----------");
         System.out.println();
 
+        
         // Print job file contents
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(jobFilePath))) {
             String line;
@@ -49,16 +54,6 @@ public class Main {
         }
         System.out.println("----------");
 
-        // Print parsed jobs
-        for (Job job : jobs) {
-            System.out.println();
-            System.out.println("Job ID: " + job.getJobID());
-            System.out.println("Job Type ID: " + job.getJobType().getJobTypeID());
-            System.out.println("Start Time: " + job.getStartTime());
-            System.out.println("Duration: " + job.getDuration());
-            System.out.println();
-        }
-
         // Print parsed tasks
         System.out.println("----------");
         System.out.println("Task Objects:");
@@ -69,13 +64,9 @@ public class Main {
         }
         System.out.println("----------");
 
-        // Parse stations
-        List<Station> stations = StationParser.parseStations(workflowFile, tasks);
-
         // Print parsed job types
         System.out.println("----------");
         System.out.println("Job Type Objects:");
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(workflowFilePath, tasks);
         for (JobType jobType : jobTypes) {
             System.out.println("JobType ID: " + jobType.getJobTypeID());
             System.out.println("Tasks Sequence:");
@@ -86,18 +77,23 @@ public class Main {
         }
         System.out.println("----------");
 
-
         // Print station views
         for (Station station : stations) {
             System.out.println(station.getView());
         }
 
+        
+
         // Process and print job details
         for (Job job : jobs) {
             System.out.println("Job ID: " + job.getJobID());
+            System.out.println("Job Type ID: " + job.getJobType().getJobTypeID());
             System.out.println("Job Start Time: " + job.getStartTime());
             System.out.println("Job Duration: " + job.getDuration());
-            System.out.println("Job Deadline: " + job.getdeadline());
+            for (Task task : job.getJobType().getTasksSequence()) {
+                System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
+            }
+            System.out.println("Job Deadline: " + job.getDeadline());
 
             // Simulate current time (e.g., job start time)
             int currentTime = job.getStartTime();
@@ -114,18 +110,19 @@ public class Main {
 
             // Show remaining time for job completion
             if (!job.isCompleted()) {
-                int timeRemaining = job.getdeadline() - currentTime;
+                int timeRemaining = job.getDeadline() - currentTime;
                 System.out.println("Time remaining for job completion: " + timeRemaining);
             }
 
             // Show how late the job is if past deadline
-            if (currentTime > job.getdeadline()) {
+            if (currentTime > job.getDeadline()) {
                 int timeAfterDeadline = job.getTimeAfterDeadline(currentTime);
                 System.out.println("Job completed " + timeAfterDeadline + " units after deadline.");
             }
 
             System.out.println();
         }
+        
 
     }
 }

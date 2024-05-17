@@ -15,8 +15,8 @@ public class Job {
         this.duration = duration;
         this.jobType = jobType;
         this.startTime = startTime;
-        this.deadline = startTime + duration; // Bitiş zamanını hesapla
-        this.completed = false; // İş henüz tamamlanmadı
+        this.deadline = startTime + duration;
+        this.completed = false;
     }
 
     // Getters and setters
@@ -60,7 +60,7 @@ public class Job {
         this.startTime = startTime;
     }
 
-    public int getdeadline() {
+    public int getDeadline() {
         return deadline;
     }
 
@@ -76,7 +76,7 @@ public class Job {
     // Method to update job status based on current time
     public void updateStatus(int currentTime) {
         if (currentTime >= deadline) {
-            completed = true; // İş tamamlandı
+            completed = true;
         }
     }
 

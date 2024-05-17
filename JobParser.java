@@ -1,9 +1,8 @@
 import java.io.*;
 import java.util.*;
 
-
 public class JobParser {
-    public static List<Job> parseJobFile(String filename) {
+    public static List<Job> parseJobFile(String filename, List<JobType> jobTypes) {
         List<Job> jobs = new ArrayList<>();
         Set<String> jobIDs = new HashSet<>();
 
@@ -25,7 +24,7 @@ public class JobParser {
 
                 // Extract jobID, jobTypeID, startTime, and duration
                 String jobID = parts[0];
-                JobType jobTypeID = JobType.valueOf(parts[1]);
+                String jobTypeIDString = parts[1]; // Assuming jobTypeID is a String
                 int duration;
                 int startTime;
                 try {
@@ -43,8 +42,22 @@ public class JobParser {
                 }
                 jobIDs.add(jobID);
 
+                // Find the matching JobType object based on jobTypeID
+                JobType matchedJobType = null;
+                for (JobType jobType : jobTypes) {
+                    if (jobType.getJobTypeID().equals(jobTypeIDString)) {
+                        matchedJobType = jobType;
+                        break;
+                    }
+                }
+
+                if (matchedJobType == null) {
+                    System.out.println("Semantic error at line " + lineNumber + ": JobType with ID " + jobTypeIDString + " not found");
+                    continue;
+                }
+
                 // Create the Job object
-                Job job = new Job(jobID, jobTypeID, startTime, duration);
+                Job job = new Job(jobID, matchedJobType, duration, startTime);
                 jobs.add(job);
             }
         } catch (FileNotFoundException e) {
