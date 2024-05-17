@@ -75,15 +75,16 @@ public class Main {
         // Print parsed job types
         System.out.println("----------");
         System.out.println("Job Type Objects:");
-        List<JobType> jobTypes = JobTypeParser.parseJobTypes(jobFilePath, tasks);
-
-        for (JobType jobType : jobTypes) {
-            System.out.println("JobType ID: " + jobType.getJobTypeID());
-            System.out.println("Tasks Sequence:");
-            for (Task task : jobType.getTasksSequence()) {
-                System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
+        for (Job job : jobs) {
+            List<JobType> jobTypes = JobTypeParser.parseJobTypes(workflowFilePath, tasks);
+            for (JobType jobType : jobTypes) {
+                System.out.println("JobType ID: " + jobType.getJobTypeID());
+                System.out.println("Tasks Sequence:");
+                for (Task task : jobType.getTasksSequence()) {
+                    System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
+                }
+                System.out.println();
             }
-            System.out.println();
         }
         System.out.println("----------");
 
@@ -126,6 +127,6 @@ public class Main {
 
             System.out.println();
         }
-        
+
     }
 }
