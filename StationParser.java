@@ -66,7 +66,7 @@ public class StationParser {
             }
         }
     
-        return new Station(stationID, maxCapacity, multiflag, fifoflag, tasksCanBeDone, speedForTask, speedVariabilityMultiplier, "active");
+        return new Station(stationID, maxCapacity, multiflag, fifoflag, tasksCanBeDone, speedForTask, speedVariabilityMultiplier);
     }
     
     private static Task findTaskByID(String taskID, List<Task> allTasks) {

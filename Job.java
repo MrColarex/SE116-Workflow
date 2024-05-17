@@ -6,7 +6,7 @@ public class Job {
     private int duration;
     private JobType jobType;
     private List<Task> tasks;
-    private int endTime;
+    private int deadline;
     private boolean completed; 
 
     // Constructor
@@ -15,7 +15,7 @@ public class Job {
         this.duration = duration;
         this.jobType = jobType;
         this.startTime = startTime;
-        this.endTime = startTime + duration; // Bitiş zamanını hesapla
+        this.deadline = startTime + duration; // Bitiş zamanını hesapla
         this.completed = false; // İş henüz tamamlanmadı
     }
 
@@ -60,8 +60,8 @@ public class Job {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
-        return endTime;
+    public int getdeadline() {
+        return deadline;
     }
 
     public boolean isCompleted() {
@@ -75,7 +75,7 @@ public class Job {
 
     // Method to update job status based on current time
     public void updateStatus(int currentTime) {
-        if (currentTime >= endTime) {
+        if (currentTime >= deadline) {
             completed = true; // İş tamamlandı
         }
     }
@@ -83,9 +83,9 @@ public class Job {
     // Method to get the time remaining or exceeded after the deadline
     public int getTimeAfterDeadline(int currentTime) {
         if (completed) {
-            return Math.max(0, currentTime - endTime); // Geçen süre, eğer iş tamamlandıysa
+            return Math.max(0, currentTime - deadline); // Geçen süre, eğer iş tamamlandıysa
         } else {
-            return Math.max(0, endTime - currentTime); // Zamanı geçen süre, eğer iş tamamlanmadıysa
+            return Math.max(0, deadline - currentTime); // Zamanı geçen süre, eğer iş tamamlanmadıysa
         }
 
     }

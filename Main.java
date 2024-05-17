@@ -97,7 +97,7 @@ public class Main {
             System.out.println("Job ID: " + job.getJobID());
             System.out.println("Job Start Time: " + job.getStartTime());
             System.out.println("Job Duration: " + job.getDuration());
-            System.out.println("Job Deadline: " + job.getEndTime());
+            System.out.println("Job Deadline: " + job.getdeadline());
 
             // Simulate current time (e.g., job start time)
             int currentTime = job.getStartTime();
@@ -114,17 +114,18 @@ public class Main {
 
             // Show remaining time for job completion
             if (!job.isCompleted()) {
-                int timeRemaining = job.getEndTime() - currentTime;
+                int timeRemaining = job.getdeadline() - currentTime;
                 System.out.println("Time remaining for job completion: " + timeRemaining);
             }
 
             // Show how late the job is if past deadline
-            if (currentTime > job.getEndTime()) {
+            if (currentTime > job.getdeadline()) {
                 int timeAfterDeadline = job.getTimeAfterDeadline(currentTime);
                 System.out.println("Job completed " + timeAfterDeadline + " units after deadline.");
             }
 
             System.out.println();
         }
+        
     }
 }

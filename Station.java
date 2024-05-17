@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.*;
 
 public class Station {
     private String stationID;
@@ -9,11 +9,13 @@ public class Station {
     private List<Double> speedForTask;
     private List<Double> speedVariabilityMultiplier;
     private String status;
+    private List<Job> waitingTasks; // List for waiting tasks (using ArrayList)
+    private List<Job> executingTasks; // List for currently executing tasks
 
-    // Constructor
-    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag,
-                   List<Task> tasksCanBeDone, List<Double> speedForTask, List<Double> speedVariabilityMultiplier,
-                   String status) {
+    private static int currentTime; // Static field for global current time
+
+    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, List<Task> tasksCanBeDone,
+                   List<Double> speedForTask, List<Double> speedVariabilityMultiplier) {
         this.stationID = stationID;
         this.maxCapacity = maxCapacity;
         this.multiflag = multiflag;
@@ -21,7 +23,9 @@ public class Station {
         this.tasksCanBeDone = tasksCanBeDone;
         this.speedForTask = speedForTask;
         this.speedVariabilityMultiplier = speedVariabilityMultiplier;
-        this.status = status;
+        this.status = "Idle";
+        this.waitingTasks = new ArrayList<>(); // Using ArrayList for waitingTasks
+        this.executingTasks = new ArrayList<>();
     }
 
     // Getter methods
@@ -79,5 +83,46 @@ public class Station {
     
         return view;
     }
+    // Method to change status to "Busy" if there are executing tasks
+    public void updateStatus() {
+        if (executingTasks.isEmpty()) {
+            status = "Idle";
+            System.out.println("Station is currently idle.");
+        } else {
+            status = "Busy";
+            System.out.println("Station is currently busy.");
+        }
+    }
+    
+    public void selectTasksFCFS() {
+        if (fifoflag) { // Check if FCFS strategy is specified for the station
+            while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
+                Job job = waitingTasks.remove(0); // Remove the first task in the waiting list
+                executingTasks.add(job);
+            }
+        }
+    }
+   public void selectTasksEDF() {
+    if (!fifoflag) { // Check if EDF strategy is specified for the station
+        // Sort waiting tasks by deadline
+        waitingTasks.sort(Comparator.comparingInt(Job::getdeadline));
+        
+        // Move tasks to executing list until max capacity is reached or no more tasks available
+        while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
+            Job job = waitingTasks.remove(0); // Remove the task with earliest deadline
+            executingTasks.add(job);
+        }
+    }
+}
+
+    public void processTaskSelection() {
+        if (fifoflag) {
+            selectTasksFCFS(); // Use FCFS strategy
+        } else {
+            selectTasksEDF(); // Use EDF strategy
+        }
+        updateStatus(); // Update station status after task selection
+    }
+
     
 }

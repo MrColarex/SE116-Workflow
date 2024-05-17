@@ -1,6 +1,6 @@
 public class Task {
     private String taskID;
-    private double taskSize; // Modified to double
+    private double taskSize; 
 
     // Constructor
     public Task(String taskID, double taskSize) { // Modified parameter to double
