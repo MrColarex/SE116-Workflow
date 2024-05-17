@@ -75,18 +75,17 @@ public class Main {
         // Print parsed job types
         System.out.println("----------");
         System.out.println("Job Type Objects:");
-        for (Job job : jobs) {
-            List<JobType> jobTypes = JobTypeParser.parseJobTypes(workflowFilePath, tasks);
-            for (JobType jobType : jobTypes) {
-                System.out.println("JobType ID: " + jobType.getJobTypeID());
-                System.out.println("Tasks Sequence:");
-                for (Task task : jobType.getTasksSequence()) {
-                    System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
-                }
-                System.out.println();
+        List<JobType> jobTypes = JobTypeParser.parseJobTypes(workflowFilePath, tasks);
+        for (JobType jobType : jobTypes) {
+            System.out.println("JobType ID: " + jobType.getJobTypeID());
+            System.out.println("Tasks Sequence:");
+            for (Task task : jobType.getTasksSequence()) {
+                System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
             }
+            System.out.println();
         }
         System.out.println("----------");
+
 
         // Print station views
         for (Station station : stations) {
