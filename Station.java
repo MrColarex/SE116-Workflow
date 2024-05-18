@@ -146,11 +146,22 @@ public class Station {
         for (Station station : stations) {
             System.out.println("Station ID: " + station.getStationID());
             System.out.println("Status: " + station.getStatus());
-            System.out.println("Executing Tasks: " + station.getExecutingTasks());
-            System.out.println("Waiting Tasks: " + station.getWaitingTasks());
+            System.out.print("Executing Tasks: ");
+            for (Job executingJob : station.getExecutingTasks()) {
+                System.out.print(executingJob.getJobID() + " "); // Print ID of each executing job
+            }
+            System.out.println(); // Add a newline after printing executing tasks
+    
+            System.out.print("Waiting Tasks: ");
+            for (Job waitingJob : station.getWaitingTasks()) {
+                System.out.print(waitingJob.getJobID() + " "); // Print ID of each waiting job
+            }
+            System.out.println(); // Add a newline after printing waiting tasks
             System.out.println();
         }
     }
+    
+    
 
     // Updated method to add a job to the station
     public void addJob(Job job) {
@@ -172,6 +183,46 @@ public class Station {
             System.out.println("Station " + stationID + " cannot start a new job as it is at full capacity.");
         }
     }
+    public void addToExecute() {
+        if (!waitingTasks.isEmpty()) {
+            if (fifoflag) {
+                // FIFO flag is true, so remove the first job from waiting list
+                Job jobToExecute = waitingTasks.remove(0);
+                executingTasks.add(jobToExecute); // Add the job to executing list
+                updateStationStatus(); // Update station status
+                System.out.println("Job " + jobToExecute.getJobID() + " added to execution list of station " + stationID);
+            } else {
+                // FIFO flag is false, so find the job with the earliest deadline
+                Job jobToExecute = findJobWithEarliestDeadline();
+                if (jobToExecute != null) {
+                    waitingTasks.remove(jobToExecute); // Remove the job from waiting list
+                    executingTasks.add(jobToExecute); // Add the job to executing list
+                    updateStationStatus(); // Update station status
+                    System.out.println("Job " + jobToExecute.getJobID() + " added to execution list of station " + stationID);
+                } else {
+                    System.out.println("No jobs in the waiting list of station " + stationID);
+                }
+            }
+        } else {
+            System.out.println("No jobs in the waiting list of station " + stationID);
+        }
+    }
+    
+    // Method to find job with earliest deadline in waiting tasks
+    private Job findJobWithEarliestDeadline() {
+        if (!waitingTasks.isEmpty()) {
+            Job earliestJob = waitingTasks.get(0);
+            for (Job job : waitingTasks) {
+                if (job.getDeadline() < earliestJob.getDeadline()) {
+                    earliestJob = job;
+                }
+            }
+            return earliestJob;
+        }
+        return null;
+    }
+    
+    
 
     // Method to mark a job as completed at the station
 

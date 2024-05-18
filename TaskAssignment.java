@@ -32,7 +32,13 @@ public class TaskAssignment {
     }
 
     // Method to assign a station to a job
-    public static void assignStationToJob(Job job, List<Station> stations) {
+    public static void assignStationToJob(Job job, List<Station> stations, double currentTime) {
+        // Check if the current time is equal to or greater than the job's start time
+        if (currentTime < job.getStartTime()) {
+            System.out.println("Job " + job.getJobID() + " cannot be assigned yet. Current time: " + currentTime + ", Start time: " + job.getStartTime());
+            return; // Exit the method without assigning the job to any station
+        }
+    
         Station station = findSuitableStation(job, stations);
         if (station != null) {
             station.addJob(job); // Assign the job to the suitable station

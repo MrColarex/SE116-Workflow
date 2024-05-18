@@ -61,29 +61,47 @@ public class Main {
 
         TaskAssignment.printJobStatus(jobs); // in taskAssignment class
 
-        double mainCurrentTime = 0;
+        double mainCurrentTime = 0.0;
 
-        while(true) {
+        while (true) {
             boolean allJobsCompleted = true; // Assume all jobs are completed initially
-            for(Job job : jobs) {
+            for (Job job : jobs) {
                 if (!job.isCompleted()) {
                     allJobsCompleted = false; // At least one job is not completed
                     break; // Exit the loop since not all jobs are completed
                 }
             }
-            
+
             if (allJobsCompleted) {
                 // All jobs are completed, exit the while loop
                 break;
             }
-            if (mainCurrentTime==0){
-                // Assigning jobs.
+
+            // If we are still continuing, this means there are still jobs to be done. 
+            // Now if we are at the beginning of the while loop, instantly go to starting time of earliest job.
+            if (mainCurrentTime == 0) {
+                // Find the earliest time to start
+                int earliestStartTime = Integer.MAX_VALUE;
                 for (Job job : jobs) {
-                TaskAssignment.assignStationToJob(job, stations);
+                    if (job.getStartTime() < earliestStartTime) {
+                        earliestStartTime = job.getStartTime();
+                    }
+                }
+                mainCurrentTime = earliestStartTime;
+                // Assign jobs to stations if their startTime matches the current time
+                for (Job job : jobs) {
+                    if (!job.isCompleted()) {
+                        TaskAssignment.assignStationToJob(job, stations, 10);
+                    }
                 }
             }
-            Station.printStationStatus(stations);
-            break; //TEMPORARY BREAK TO TEST
+
+            
+            break; // TEMPORARY BREAK TO TEST
         }
+        for (Station station : stations) {
+            station.addToExecute();
+        }
+        Station.printStationStatus(stations);
     }
 }

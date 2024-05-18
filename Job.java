@@ -10,7 +10,7 @@ public class Job {
     private boolean completed;
 
     // Constructor
-    public Job(String jobID, JobType jobType, int duration, int startTime) {
+    public Job(String jobID, JobType jobType, int startTime, int duration) {
         this.jobID = jobID;
         this.duration = duration;
         this.jobType = jobType;
@@ -19,6 +19,9 @@ public class Job {
         this.completed = false;
     }
 
+    public String toString() {
+        return "Job ID: " + jobID + ", StartTime: " + startTime + ", Duration: " + duration;
+    }
     // Getters and setters
     public String getJobID() {
         return jobID;

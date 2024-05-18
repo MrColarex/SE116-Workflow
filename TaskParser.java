@@ -7,6 +7,27 @@ import java.io.File;
 
 public class TaskParser {
 
+    public static void parseAndAssignTasks(List<Station> stations, File workflowFile) {
+        List<Task> tasks = parseTasks(workflowFile);
+
+        // Iterate over tasks and assign them to stations
+        for (Task task : tasks) {
+            boolean taskAssigned = false;
+            for (Station station : stations) {
+                if (station.canProcessTask(task)) {
+                    if (station.getExecutingTasks().size() < station.getMaxCapacity()) {
+                        station.addJob(new Job(task.getTaskID(), null, 0, 0)); // Create a temporary job
+                        taskAssigned = true;
+                        break;
+                    }
+                }
+            }
+            if (!taskAssigned) {
+                System.out.println("No station available to process task: " + task.getTaskID());
+            }
+        }
+    }
+
     public static List<Task> parseTasks(File workflowFile) {
         String line;
         String currentTaskID = null;
@@ -15,8 +36,8 @@ public class TaskParser {
         List<Task> tasks = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(workflowFile))) {
-            
-            
+
+
             while ((line = br.readLine()) != null) {
                 line = line.trim(); // Removing spaces at the beginning and at the end
                 if (line.isEmpty()) {
@@ -25,7 +46,7 @@ public class TaskParser {
                 // Check if the line represents task types
                 if (line.startsWith("(JOBTYPES"))
                     indexOfType = 1; // This stops the parsing of tasks once jobtypes starts
-    
+
 
                 if (indexOfType == 0) {
                     String[] elements = line.split(" ");
@@ -81,7 +102,7 @@ public class TaskParser {
         } catch (IOException e) {
             System.err.println("Error reading the workflow file: " + e.getMessage());
         }
-        
+
         return tasks;
     }
 }
