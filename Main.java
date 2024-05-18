@@ -53,11 +53,16 @@ public class Main {
         // Process and print job details
         Job.printJobDetails(jobs, stations); //in job class
 
+        System.out.println("----------");
+
         Station.printStationStatus(stations); //in station class
+
+        System.out.println("----------");
 
         TaskAssignment.printJobStatus(jobs); // in taskAssignment class
 
-        int mainCurrentTime = 0;
+        double mainCurrentTime = 0;
+
         while(true) {
             boolean allJobsCompleted = true; // Assume all jobs are completed initially
             for(Job job : jobs) {
@@ -77,13 +82,7 @@ public class Main {
                 TaskAssignment.assignStationToJob(job, stations);
                 }
             }
-            for (Station station : stations) {
-                System.out.println("Station ID: " + station.getStationID());
-                System.out.println("Status: " + station.getStatus());
-                System.out.println("Executing Tasks: " + station.getExecutingTasks());
-                System.out.println("Waiting Tasks: " + station.getWaitingTasks());
-                System.out.println();
-            }
+            Station.printStationStatus(stations);
             break; //TEMPORARY BREAK TO TEST
         }
     }

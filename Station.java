@@ -128,6 +128,7 @@ public class Station {
         view.append("Status: ").append(status).append("\n");
         return view.toString();
     }
+    
 
     // Method to update station status
     public void updateStationStatus() {
@@ -139,7 +140,7 @@ public class Station {
             status = "Busy";
         }
     }
-    
+
     public static void printStationStatus(List<Station> stations) {
         System.out.println("Station Status:");
         for (Station station : stations) {
