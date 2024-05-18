@@ -13,6 +13,9 @@ public class Station {
     private List<Job> waitingTasks;
     private List<Job> executingTasks;
 
+    //Current time as static number beacause time is same for all stations. 
+    public static double currentTime = 0;
+
     // Constructor
     public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag,
                    List<Task> tasksCanBeDone, List<Double> speedForTask, List<Double> speedVariabilityMultiplier) {
@@ -130,14 +133,27 @@ public class Station {
     public void updateStationStatus() {
         if (executingTasks.isEmpty() && waitingTasks.isEmpty()) {
             status = "Idle";
+        } else if (waitingTasks.size() + executingTasks.size() >= maxCapacity) {
+            status = "Full"; // Update status to "Full" when at max capacity
         } else {
             status = "Busy";
         }
     }
+    
+    public static void printStationStatus(List<Station> stations) {
+        System.out.println("Station Status:");
+        for (Station station : stations) {
+            System.out.println("Station ID: " + station.getStationID());
+            System.out.println("Status: " + station.getStatus());
+            System.out.println("Executing Tasks: " + station.getExecutingTasks());
+            System.out.println("Waiting Tasks: " + station.getWaitingTasks());
+            System.out.println();
+        }
+    }
 
-    // Method to add a job to the station
+    // Updated method to add a job to the station
     public void addJob(Job job) {
-        if (waitingTasks.size() < maxCapacity) {
+        if (waitingTasks.size() + executingTasks.size() < maxCapacity) {
             waitingTasks.add(job);
             updateStationStatus();
         } else {
@@ -145,7 +161,19 @@ public class Station {
         }
     }
 
+    // Method to start a job at the station
+    public void startJob(Job job) {
+        if (executingTasks.size() < maxCapacity) {
+            executingTasks.add(job); // Add the job to the list of executing tasks
+            waitingTasks.remove(job); // Remove the job from the waiting list
+            updateStationStatus();
+        } else {
+            System.out.println("Station " + stationID + " cannot start a new job as it is at full capacity.");
+        }
+    }
+
     // Method to mark a job as completed at the station
+
     public void completeJob(Job job) {
         executingTasks.remove(job);
         updateStationStatus();

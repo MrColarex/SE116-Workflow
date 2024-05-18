@@ -2,6 +2,14 @@ import java.util.List;
 
 public class TaskAssignment {
 
+    public static void printJobStatus(List<Job> jobs) {
+        System.out.println("Job Status:");
+        for (Job job : jobs) {
+            System.out.println("Job ID: " + job.getJobID());
+            System.out.println("Job Status: " + (job.isCompleted() ? "Completed" : "In Progress or did not start yet"));
+            System.out.println();
+        }
+    }
     // Method to find a suitable station for processing a job
     public static Station findSuitableStation(Job job, List<Station> stations) {
         // Iterate over each task in the job's job type's task sequence
@@ -28,6 +36,10 @@ public class TaskAssignment {
         Station station = findSuitableStation(job, stations);
         if (station != null) {
             station.addJob(job); // Assign the job to the suitable station
+            // Check if the station is at full capacity after adding the job
+            if (station.getWaitingTasks().size() + station.getExecutingTasks().size() >= station.getMaxCapacity()) {
+                station.setStatus("Full"); // Set the station's status to "Full"
+            }
             System.out.println("Job " + job.getJobID() + " assigned to station " + station.getStationID());
         } else {
             System.out.println("No suitable station found for job " + job.getJobID());

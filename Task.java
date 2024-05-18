@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Task {
     private String taskID;
     private double taskSize; 
@@ -28,5 +30,14 @@ public class Task {
     @Override
     public String toString() {
         return taskID; // Just return the task ID when converting Task object to String
+    }
+    public static void printParsedTasks(List<Task> tasks) {
+        System.out.println("----------");
+        System.out.println("Task Objects:");
+        for (Task task : tasks) {
+            System.out.println("Task ID: " + task.getTaskID());
+            System.out.println("Task Size: " + task.getTaskSize());
+            System.out.println();
+        }
     }
 }
