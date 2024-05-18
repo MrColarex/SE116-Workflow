@@ -7,7 +7,7 @@ public class Job {
     private JobType jobType;
     private List<Task> tasks;
     private int deadline;
-    private boolean completed; 
+    private boolean completed;
 
     // Constructor
     public Job(String jobID, JobType jobType, int duration, int startTime) {
@@ -67,6 +67,8 @@ public class Job {
     public boolean isCompleted() {
         return completed;
     }
+
+    public void setCompleted(boolean completed) {}
 
     // Method to add tasks to the job
     public void addTask(Task task) {

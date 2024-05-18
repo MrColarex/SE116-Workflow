@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Station {
     private String stationID;
@@ -9,13 +10,14 @@ public class Station {
     private List<Double> speedForTask;
     private List<Double> speedVariabilityMultiplier;
     private String status;
-    private List<Job> waitingTasks; // List for waiting tasks (using ArrayList)
-    private List<Job> executingTasks; // List for currently executing tasks
+    private List<Job> waitingTasks;
+    private List<Job> executingTasks;
+    private List<JobType> processableJobTypes;
 
-    private static int currentTime; // Static field for global current time
 
-    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag, List<Task> tasksCanBeDone,
-                   List<Double> speedForTask, List<Double> speedVariabilityMultiplier) {
+    // Constructor
+    public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag,
+                   List<Task> tasksCanBeDone, List<Double> speedForTask, List<Double> speedVariabilityMultiplier) {
         this.stationID = stationID;
         this.maxCapacity = maxCapacity;
         this.multiflag = multiflag;
@@ -24,104 +26,150 @@ public class Station {
         this.speedForTask = speedForTask;
         this.speedVariabilityMultiplier = speedVariabilityMultiplier;
         this.status = "Idle";
-        this.waitingTasks = new ArrayList<>(); // Using ArrayList for waitingTasks
+        this.waitingTasks = new ArrayList<>();
         this.executingTasks = new ArrayList<>();
+        this.processableJobTypes = new ArrayList<>();
     }
 
-    // Getter methods
+    // Getters and Setters
     public String getStationID() {
         return stationID;
+    }
+
+    public void setStationID(String stationID) {
+        this.stationID = stationID;
     }
 
     public int getMaxCapacity() {
         return maxCapacity;
     }
 
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
+
     public boolean isMultiflag() {
         return multiflag;
+    }
+
+    public void setMultiflag(boolean multiflag) {
+        this.multiflag = multiflag;
     }
 
     public boolean isFifoflag() {
         return fifoflag;
     }
 
+    public void setFifoflag(boolean fifoflag) {
+        this.fifoflag = fifoflag;
+    }
+
     public List<Task> getTasksCanBeDone() {
         return tasksCanBeDone;
+    }
+
+    public void setTasksCanBeDone(List<Task> tasksCanBeDone) {
+        this.tasksCanBeDone = tasksCanBeDone;
     }
 
     public List<Double> getSpeedForTask() {
         return speedForTask;
     }
 
+    public void setSpeedForTask(List<Double> speedForTask) {
+        this.speedForTask = speedForTask;
+    }
+
     public List<Double> getSpeedVariabilityMultiplier() {
         return speedVariabilityMultiplier;
+    }
+
+    public void setSpeedVariabilityMultiplier(List<Double> speedVariabilityMultiplier) {
+        this.speedVariabilityMultiplier = speedVariabilityMultiplier;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<Job> getWaitingTasks() {
+        return waitingTasks;
+    }
+
+    public void setWaitingTasks(List<Job> waitingTasks) {
+        this.waitingTasks = waitingTasks;
+    }
+
+    public List<Job> getExecutingTasks() {
+        return executingTasks;
+    }
+
+    public void setExecutingTasks(List<Job> executingTasks) {
+        this.executingTasks = executingTasks;
+    }
+
     // Method to get a view of the station
     public String getView() {
-        String view = "Station ID: " + stationID + "\n" +
-                      "Max Capacity: " + maxCapacity + "\n" +
-                      "Multiflag: " + multiflag + "\n" +
-                      "FIFOflag: " + fifoflag + "\n" +
-                      "Tasks that can be done: ";
-    
-        // Append task names individually
-        for (int i = 0; i < tasksCanBeDone.size(); i++) {
-            if (i > 0) {
-                view += ", ";
-            }
-            view += tasksCanBeDone.get(i).getTaskID();
+        StringBuilder view = new StringBuilder();
+        view.append("Station ID: ").append(stationID).append("\n");
+        view.append("Max Capacity: ").append(maxCapacity).append("\n");
+        view.append("Multiflag: ").append(multiflag).append("\n");
+        view.append("FIFOflag: ").append(fifoflag).append("\n");
+        view.append("Tasks that can be done: ");
+        for (Task task : tasksCanBeDone) {
+            view.append(task.getTaskID()).append(", ");
         }
-    
-        view += "\nSpeed for Task: " + speedForTask + "\n" +
-                "Speed Variability Multiplier: " + speedVariabilityMultiplier + "\n" +
-                "Status: " + status + "\n";
-    
-        return view;
+        view.append("\nSpeed for Task: ").append(speedForTask).append("\n");
+        view.append("Speed Variability Multiplier: ").append(speedVariabilityMultiplier).append("\n");
+        view.append("Status: ").append(status).append("\n");
+        return view.toString();
     }
-    // Method to change status to "Busy" if there are executing tasks
-    public void updateStatus() {
-        if (executingTasks.isEmpty()) {
+
+    // Method to update station status
+    public void updateStationStatus() {
+        if (executingTasks.isEmpty() && waitingTasks.isEmpty()) {
             status = "Idle";
-            System.out.println("Station is currently idle.");
         } else {
             status = "Busy";
-            System.out.println("Station is currently busy.");
         }
-    }
-    
-    public void selectTasksFCFS() {
-        if (fifoflag) { // Check if FCFS strategy is specified for the station
-            while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
-                Job job = waitingTasks.remove(0); // Remove the first task in the waiting list
-                executingTasks.add(job);
-            }
-        }
-    }
-   public void selectTasksEDF() {
-    if (!fifoflag) { // Check if EDF strategy is specified for the station
-        // Sort waiting tasks by deadline
-        waitingTasks.sort(Comparator.comparingInt(Job::getDeadline));
-        
-        // Move tasks to executing list until max capacity is reached or no more tasks available
-        while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
-            Job job = waitingTasks.remove(0); // Remove the task with earliest deadline
-            executingTasks.add(job);
-        }
-    }
-}
-
-    public void processTaskSelection() {
-        if (fifoflag) {
-            selectTasksFCFS(); // Use FCFS strategy
-        } else {
-            selectTasksEDF(); // Use EDF strategy
-        }
-        updateStatus(); // Update station status after task selection
     }
 
+
+
+
+
+    // Method to add a job to the station
+    public void addJob(Job job) {
+        waitingTasks.add(job);
+        updateStationStatus();
+    }
+
+    // Method to mark a job as completed at the station
+    public void completeJob(Job job) {
+        executingTasks.remove(job);
+        updateStationStatus();
+
+
+
+
+    }
+
+    // İşleyebileceği iş türlerini eklemek için yöntem
+    public void addProcessableJobType(JobType jobType) {
+        processableJobTypes.add(jobType);
+    }
+
+    // İşleyebileceği iş türlerini kontrol etmek için yöntem
+    public boolean canProcessJobType(JobType jobType) {
+        return processableJobTypes.contains(jobType);
+    }
+
+    // Diğer getter ve setter metotları burada olacak
 }
+
+
+

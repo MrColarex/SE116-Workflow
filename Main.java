@@ -42,7 +42,7 @@ public class Main {
         System.out.println("----------");
         System.out.println();
 
-        
+
         // Print job file contents
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(jobFilePath))) {
             String line;
@@ -82,7 +82,7 @@ public class Main {
             System.out.println(station.getView());
         }
 
-        
+
 
         // Process and print job details
         for (Job job : jobs) {
@@ -122,7 +122,30 @@ public class Main {
 
             System.out.println();
         }
-        
+
+        System.out.println("Station Status:");
+        for (Station station : stations) {
+            System.out.println("Station ID: " + station.getStationID());
+            System.out.println("Status: " + station.getStatus());
+            System.out.println("Executing Tasks: " + station.getExecutingTasks());
+            System.out.println("Waiting Tasks: " + station.getWaitingTasks());
+            System.out.println();
+        }
+
+// Görevlerin durumunu kontrol et
+        System.out.println("Job Status:");
+        for (Job job : jobs) {
+            System.out.println("Job ID: " + job.getJobID());
+            System.out.println("Job Status: " + (job.isCompleted() ? "Completed" : "In Progress"));
+            System.out.println();
+        }
+
+
+
+        // 2. Bir Job Atama İşlemi Yapın
+        for (Job job : jobs) {
+            TaskAssignment.assignStationToJob(job, stations);
+        }
 
     }
 }

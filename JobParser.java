@@ -66,4 +66,14 @@ public class JobParser {
 
         return jobs;
     }
+
+    public static void updateJobStatus(List<Job> jobs, List<Station> stations, int currentTime) {
+        for (Station station : stations) {
+            for (Job job : station.getExecutingTasks()) {
+                if (job.getDeadline() <= currentTime) {
+                    job.setCompleted(true); // İşin son teslim tarihini geçmişse işi tamamlanmış olarak işaretle
+                }
+            }
+        }
+    }
 }
