@@ -12,8 +12,6 @@ public class Station {
     private String status;
     private List<Job> waitingTasks;
     private List<Job> executingTasks;
-    private List<JobType> processableJobTypes;
-
 
     // Constructor
     public Station(String stationID, int maxCapacity, boolean multiflag, boolean fifoflag,
@@ -28,7 +26,6 @@ public class Station {
         this.status = "Idle";
         this.waitingTasks = new ArrayList<>();
         this.executingTasks = new ArrayList<>();
-        this.processableJobTypes = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -138,38 +135,24 @@ public class Station {
         }
     }
 
-
-
-
-
     // Method to add a job to the station
     public void addJob(Job job) {
-        waitingTasks.add(job);
-        updateStationStatus();
+        if (waitingTasks.size() < maxCapacity) {
+            waitingTasks.add(job);
+            updateStationStatus();
+        } else {
+            System.out.println("Station " + stationID + " is at full capacity.");
+        }
     }
 
     // Method to mark a job as completed at the station
     public void completeJob(Job job) {
         executingTasks.remove(job);
         updateStationStatus();
-
-
-
-
     }
 
-    // İşleyebileceği iş türlerini eklemek için yöntem
-    public void addProcessableJobType(JobType jobType) {
-        processableJobTypes.add(jobType);
+    // Check if the station can process a given task
+    public boolean canProcessTask(Task task) {
+        return tasksCanBeDone.contains(task);
     }
-
-    // İşleyebileceği iş türlerini kontrol etmek için yöntem
-    public boolean canProcessJobType(JobType jobType) {
-        return processableJobTypes.contains(jobType);
-    }
-
-    // Diğer getter ve setter metotları burada olacak
 }
-
-
-

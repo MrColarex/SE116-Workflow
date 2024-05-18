@@ -105,7 +105,7 @@ public class Main {
             if (job.isCompleted()) {
                 System.out.println("Job is completed.");
             } else {
-                System.out.println("Job is still in progress.");
+                System.out.println("Job is still in progress or havent started yet.");
             }
 
             // Show remaining time for job completion
@@ -136,11 +136,9 @@ public class Main {
         System.out.println("Job Status:");
         for (Job job : jobs) {
             System.out.println("Job ID: " + job.getJobID());
-            System.out.println("Job Status: " + (job.isCompleted() ? "Completed" : "In Progress"));
+            System.out.println("Job Status: " + (job.isCompleted() ? "Completed" : "In Progress or did not start yet"));
             System.out.println();
         }
-
-
 
         // 2. Bir Job Atama İşlemi Yapın
         for (Job job : jobs) {
