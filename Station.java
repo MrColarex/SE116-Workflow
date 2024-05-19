@@ -186,23 +186,27 @@ public class Station {
     public void addToExecute() {
         if (!waitingTasks.isEmpty()) {
             if (fifoflag) {
-                // FIFO flag is true, so remove the first job from waiting list
-                Job jobToExecute = waitingTasks.remove(0);
-                executingTasks.add(jobToExecute); // Add the job to executing list
-                updateStationStatus(); // Update station status
-                System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
-            } else {
-                // FIFO flag is false, so find the job with the earliest deadline
-                Job jobToExecute = findJobWithEarliestDeadline();
-                if (jobToExecute != null) {
-                    waitingTasks.remove(jobToExecute); // Remove the job from waiting list
+                // FIFO flag is true, add jobs from the beginning of the waiting list
+                while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
+                    Job jobToExecute = waitingTasks.remove(0); // Remove the first job from waiting list
                     executingTasks.add(jobToExecute); // Add the job to executing list
-                    updateStationStatus(); // Update station status
                     System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
-                } else {
-                    System.out.println("No jobs in the waiting list of station " + stationID);
+                }
+            } else {
+                // FIFO flag is false, add jobs with the earliest deadlines
+                while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
+                    Job jobToExecute = findJobWithEarliestDeadline();
+                    if (jobToExecute != null) {
+                        waitingTasks.remove(jobToExecute); // Remove the job from waiting list
+                        executingTasks.add(jobToExecute); // Add the job to executing list
+                        System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
+                    } else {
+                        System.out.println("No jobs in the waiting list of station " + stationID);
+                        break; // Exit the loop if no jobs are found
+                    }
                 }
             }
+            updateStationStatus(); // Update station status after adding jobs
         } else {
             System.out.println("No jobs in the waiting list of station " + stationID);
         }
@@ -222,8 +226,6 @@ public class Station {
         return null;
     }
     
-    
-
     // Method to mark a job as completed at the station
 
     public void completeJob(Job job) {
