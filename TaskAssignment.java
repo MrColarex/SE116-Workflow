@@ -35,7 +35,7 @@ public class TaskAssignment {
     public static void assignStationToJob(Job job, List<Station> stations, double currentTime) {
         // Check if the current time is equal to or greater than the job's start time
         if (currentTime < job.getStartTime()) {
-            System.out.println("Job " + job.getJobID() + " cannot be assigned yet. Current time: " + currentTime + ", Start time: " + job.getStartTime());
+            System.out.println(job.getJobID() + " cannot be assigned yet. Current time: " + currentTime + ", Start time: " + job.getStartTime());
             return; // Exit the method without assigning the job to any station
         }
     
@@ -46,9 +46,11 @@ public class TaskAssignment {
             if (station.getWaitingTasks().size() + station.getExecutingTasks().size() >= station.getMaxCapacity()) {
                 station.setStatus("Full"); // Set the station's status to "Full"
             }
-            System.out.println("Job " + job.getJobID() + " assigned to station " + station.getStationID());
+            System.out.println(job.getJobID() + " assigned to station " + station.getStationID());
+
         } else {
-            System.out.println("No suitable station found for job " + job.getJobID());
+            System.out.println("No suitable station found for " + job.getJobID());
+
         }
     }
 }

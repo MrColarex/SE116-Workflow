@@ -190,7 +190,7 @@ public class Station {
                 Job jobToExecute = waitingTasks.remove(0);
                 executingTasks.add(jobToExecute); // Add the job to executing list
                 updateStationStatus(); // Update station status
-                System.out.println("Job " + jobToExecute.getJobID() + " added to execution list of station " + stationID);
+                System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
             } else {
                 // FIFO flag is false, so find the job with the earliest deadline
                 Job jobToExecute = findJobWithEarliestDeadline();
@@ -198,7 +198,7 @@ public class Station {
                     waitingTasks.remove(jobToExecute); // Remove the job from waiting list
                     executingTasks.add(jobToExecute); // Add the job to executing list
                     updateStationStatus(); // Update station status
-                    System.out.println("Job " + jobToExecute.getJobID() + " added to execution list of station " + stationID);
+                    System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
                 } else {
                     System.out.println("No jobs in the waiting list of station " + stationID);
                 }

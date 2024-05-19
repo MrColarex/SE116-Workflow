@@ -87,6 +87,7 @@ public class Main {
                         earliestStartTime = job.getStartTime();
                     }
                 }
+                System.out.println("Job assignation:");
                 mainCurrentTime = earliestStartTime;
                 // Assign jobs to stations if their startTime matches the current time
                 for (Job job : jobs) {
@@ -95,13 +96,18 @@ public class Main {
                     }
                 }
             }
+            System.out.println();
+            System.out.println();
 
             
             break; // TEMPORARY BREAK TO TEST
         }
+        System.out.println("Job adding to execution list of station:");
         for (Station station : stations) {
             station.addToExecute();
         }
+        System.out.println();
+        System.out.println();
         Station.printStationStatus(stations);
     }
 }
