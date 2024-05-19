@@ -77,7 +77,7 @@ public class Main {
                 break;
             }
 
-            // If we are still continuing, this means there are still jobs to be done. 
+            // If we are still continuing, this means there are still jobs to be done.
             // Now if we are at the beginning of the while loop, instantly go to starting time of earliest job.
             if (mainCurrentTime == 0) {
                 // Find the earliest time to start
@@ -98,23 +98,24 @@ public class Main {
             }
             System.out.println();
             System.out.println();
-            System.out.println("Job adding to execution list of station:");
-            for (Station station : stations) {
-                station.addToExecute();
-            }
-            for (Station station : stations) {
-            station.executeTasksForAllJobs();
-            }
 
-            
+
             break; // TEMPORARY BREAK TO TEST
         }
-       
+        System.out.println("Job adding to execution list of station:");
+        for (Station station : stations) {
+            station.addToExecute();
+        }
+        System.out.println();
         System.out.println();
         Station.printStationStatus(stations);
-        
-        
 
-        
-    }
+        DiscreteEventSimulation simulation = new DiscreteEventSimulation(stations);
+
+        // Schedule job start events
+        // Start the simulation
+        simulation.start(jobs);
+  }
+
 }
+
