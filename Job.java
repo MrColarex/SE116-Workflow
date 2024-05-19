@@ -18,7 +18,7 @@ public class Job {
         this.startTime = startTime;
         this.deadline = startTime + duration;
         this.completed = false;
-        this.tasks = new ArrayList<>(); // Initialize the tasks list
+        this.tasks = new ArrayList<>(jobType.getTasksSequence()); // Initialize the tasks list
     }
 
     public String toString() {
@@ -103,42 +103,43 @@ public class Job {
     public static void printJobDetails(List<Job> jobs, List<Station> stations) {
         for (Job job : jobs) {
             System.out.println("Job ID: " + job.getJobID());
-            System.out.println("Job Type ID: " + job.getJobType().getJobTypeID());
             System.out.println("Job Start Time: " + job.getStartTime());
             System.out.println("Job Duration: " + job.getDuration());
-            for (Task task : job.getJobType().getTasksSequence()) {
+            System.out.println("Tasks for this job:");
+            for (Task task : job.getTasks()) { // Iterate over tasks in the Job object
                 System.out.println("Task ID: " + task.getTaskID() + ", Task Size: " + task.getTaskSize());
             }
             System.out.println("Job Deadline: " + job.getDeadline());
-
+    
             // Simulate current time (e.g., job start time)
             int currentTime = job.getStartTime();
-
+    
             // Update job status
             job.updateStatus(currentTime);
-
+    
             // Check if job is completed
             if (job.isCompleted()) {
                 System.out.println("Job is completed.");
             } else {
                 System.out.println("Job is still in progress or haven't started yet.");
             }
-
+    
             // Show remaining time for job completion
             if (!job.isCompleted()) {
                 int timeRemaining = job.getDeadline() - currentTime;
                 System.out.println("Time remaining for job completion: " + timeRemaining);
             }
-
+    
             // Show how late the job is if past deadline
             if (currentTime > job.getDeadline()) {
                 int timeAfterDeadline = job.getTimeAfterDeadline(currentTime);
                 System.out.println("Job completed " + timeAfterDeadline + " units after deadline.");
             }
-
+    
             System.out.println();
         }
     }
+    
 
     // Method to get the time remaining or exceeded after the deadline
     public int getTimeAfterDeadline(int currentTime) {
@@ -150,22 +151,22 @@ public class Job {
     }
     public Task getNextTask() {
         if (!tasks.isEmpty()) {
-            return tasks.remove(0); // Remove and return the first task from the list
+            return tasks.get(0); // Return the first task from the list
         } else {
             return null; // Return null if there are no tasks remaining
         }
     }
 
     // Method to mark the current task as completed
-    public void completeTask() {
-        if (!tasks.isEmpty()) {
-            tasks.remove(0); // Remove the first task from the list
-        }
+    public void completeTask(Task task) {
+        tasks.remove(task);
     }
+
 
     // Method to get the number of remaining tasks in the job
     public int getRemainingTasks() {
         return tasks.size();
     }
+    
 
 }

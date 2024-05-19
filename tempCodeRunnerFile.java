@@ -62,7 +62,7 @@ public class Main {
         TaskAssignment.printJobStatus(jobs); // in taskAssignment class
 
         double mainCurrentTime = 0.0;
-        int testvariable = 0;
+
         while (true) {
             boolean allJobsCompleted = true; // Assume all jobs are completed initially
             for (Job job : jobs) {
@@ -92,7 +92,7 @@ public class Main {
                 // Assign jobs to stations if their startTime matches the current time
                 for (Job job : jobs) {
                     if (!job.isCompleted()) {
-                        TaskAssignment.assignStationToJob(job, stations, mainCurrentTime);
+                        TaskAssignment.assignStationToJob(job, stations, 10);
                     }
                 }
             }
@@ -107,12 +107,12 @@ public class Main {
             station.executeTasksForAllJobs();
             }
 
-            testvariable++;
-            if (testvariable==2 )break; // TEMPORARY BREAK TO TEST
+            
+            break; // TEMPORARY BREAK TO TEST
         }
-        TaskAssignment.printJobStatus(jobs); // in taskAssignment class
+       
         System.out.println("Updated Job Details:");
         Job.printJobDetails(jobs, stations);
-        System.out.println(mainCurrentTime);
+        
     }
 }
