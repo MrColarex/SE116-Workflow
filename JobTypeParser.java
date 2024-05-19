@@ -47,8 +47,17 @@ public class JobTypeParser {
             // Check if the next part is a number to assign as the task size
             if (i + 1 < parts.length && parts[i + 1].matches("\\d+(\\.\\d+)?")) {
                 taskSize = Double.parseDouble(parts[i + 1]);
+                // Check if task size is negative
+                if (taskSize < 0) {
+                    System.out.println(taskID + " has a negative task size of " + taskSize);
+                    // Handle the negative task size error as required
+                    // You can throw an exception or handle it in another way
+                }
                 i++; // Increment i to skip the task size in the next iteration
+            } else {
+                taskSize = findTaskSize(taskID, tasksFromWorkflow);
             }
+
             tasks.add(new Task(taskID, taskSize));
         }
 

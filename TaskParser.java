@@ -2,8 +2,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.io.File;
+import java.util.Set;
 
 public class TaskParser {
 
@@ -34,10 +36,10 @@ public class TaskParser {
         int indexOfType = 0; //indexOfType tells which type are we working on (jobtypes stations or tasktypes.)
         List<String> taskTypeElements = new ArrayList<>(); // List to store elements of TASKTYPES
         List<Task> tasks = new ArrayList<>();
+        Set<String> taskIDs = new HashSet<>();
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(workflowFile))) {
-
-
             while ((line = br.readLine()) != null) {
                 line = line.trim(); // Removing spaces at the beginning and at the end
                 if (line.isEmpty()) {
@@ -77,32 +79,68 @@ public class TaskParser {
                     // Try to parse the element as a double
                     double size = Double.parseDouble(element);
 
-                    // Update current task ID
+                    // Check for negative TaskSize
+                    if (size < 0) {
+                        System.out.println("Semantic error: Negative TaskSize for taskID " + currentTaskID);
+                        continue; // Skip to the next iteration
+                    }
+
+                    // Check for duplicate task IDs
+                    if (currentTaskID != null && taskIDs.contains(currentTaskID)) {
+                        System.out.println("Semantic error: Duplicate taskID " + currentTaskID);
+                        currentTaskID = null; // Reset current task ID to skip this entry
+                        continue;
+                    }
+
+                    // Add the task with the current ID and size
                     if (currentTaskID != null) {
                         tasks.add(new Task(currentTaskID, size));
+                        taskIDs.add(currentTaskID); // Add to set of task IDs
                     }
 
                     // Reset current task ID
                     currentTaskID = null;
                 } catch (NumberFormatException e) {
                     // If parsing as a double fails, assume it's a task ID
-                    if (currentTaskID != null) {
-                        // Assuming size 0 for the current task if size is not explicitly provided
+                    if (currentTaskID != null && !taskIDs.contains(currentTaskID)) {
+                        // Add the task with size 0 if the current ID is not a duplicate
                         tasks.add(new Task(currentTaskID, 0));
+                        taskIDs.add(currentTaskID); // Add to set of task IDs
                     }
                     currentTaskID = element;
+
+                    // Validate the tasktypeID manually
+                    if (!isValidTaskID(currentTaskID)) {
+                        System.out.println(currentTaskID + " is an invalid tasktypeID");
+                        return tasks; // Return early since we want to stop processing
+                    }
                 }
             }
-            // Add the last task if it exists
-            if (currentTaskID != null) {
+            // Add the last task if it exists and is not a duplicate
+            if (currentTaskID != null && !taskIDs.contains(currentTaskID)) {
                 // Assuming size 0 for the last task if size is not explicitly provided
                 tasks.add(new Task(currentTaskID, 0));
+                taskIDs.add(currentTaskID); // Add to set of task IDs
             }
 
         } catch (IOException e) {
             System.err.println("Error reading the workflow file: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Incorrect input. Please provide valid input.");
+            tasks.clear(); // Clear the tasks list
         }
 
         return tasks;
+    }
+    private static boolean isValidTaskID(String taskID) {
+        if (!Character.isLetter(taskID.charAt(0))) {
+            return false; // First character must be a letter
+        }
+        for (char c : taskID.toCharArray()) {
+            if (!Character.isLetterOrDigit(c) && c != '_' && c != '-') {
+                return false; // Return false if any character is not alphanumeric
+            }
+        }
+        return true; // Return true if all characters are alphanumeric
     }
 }
