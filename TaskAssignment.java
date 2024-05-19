@@ -17,7 +17,7 @@ public class TaskAssignment {
             // Iterate over each station
             for (Station station : stations) {
                 // Check if the station has capacity
-                if (station.getWaitingTasks().size() < station.getMaxCapacity()) {
+                if (station.getwaitingJobs().size() < station.getMaxCapacity()) {
                     // Iterate over each task that the station can perform
                     for (Task stationTask : station.getTasksCanBeDone()) {
                         // Compare the task IDs
@@ -43,7 +43,7 @@ public class TaskAssignment {
         if (station != null) {
             station.addJob(job); // Assign the job to the suitable station
             // Check if the station is at full capacity after adding the job
-            if (station.getWaitingTasks().size() + station.getExecutingTasks().size() >= station.getMaxCapacity()) {
+            if (station.getwaitingJobs().size() + station.getexecutingJobs().size() >= station.getMaxCapacity()) {
                 station.setStatus("Full"); // Set the station's status to "Full"
             }
             System.out.println(job.getJobID() + " assigned to station " + station.getStationID());

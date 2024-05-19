@@ -17,7 +17,7 @@ public class TaskParser {
             boolean taskAssigned = false;
             for (Station station : stations) {
                 if (station.canProcessTask(task)) {
-                    if (station.getExecutingTasks().size() < station.getMaxCapacity()) {
+                    if (station.getexecutingJobs().size() < station.getMaxCapacity()) {
                         station.addJob(new Job(task.getTaskID(), null, 0, 0)); // Create a temporary job
                         taskAssigned = true;
                         break;

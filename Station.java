@@ -10,8 +10,8 @@ public class Station {
     private List<Double> speedForTask;
     private List<Double> speedVariabilityMultiplier;
     private String status;
-    private List<Job> waitingTasks;
-    private List<Job> executingTasks;
+    private List<Job> waitingJobs;
+    private List<Job> executingJobs;
 
     //Current time as static number beacause time is same for all stations. 
     public static double currentTime = 0;
@@ -27,8 +27,8 @@ public class Station {
         this.speedForTask = speedForTask;
         this.speedVariabilityMultiplier = speedVariabilityMultiplier;
         this.status = "Idle";
-        this.waitingTasks = new ArrayList<>();
-        this.executingTasks = new ArrayList<>();
+        this.waitingJobs = new ArrayList<>();
+        this.executingJobs = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -96,20 +96,20 @@ public class Station {
         this.status = status;
     }
 
-    public List<Job> getWaitingTasks() {
-        return waitingTasks;
+    public List<Job> getwaitingJobs() {
+        return waitingJobs;
     }
 
-    public void setWaitingTasks(List<Job> waitingTasks) {
-        this.waitingTasks = waitingTasks;
+    public void setwaitingJobs(List<Job> waitingJobs) {
+        this.waitingJobs = waitingJobs;
     }
 
-    public List<Job> getExecutingTasks() {
-        return executingTasks;
+    public List<Job> getexecutingJobs() {
+        return executingJobs;
     }
 
-    public void setExecutingTasks(List<Job> executingTasks) {
-        this.executingTasks = executingTasks;
+    public void setexecutingJobs(List<Job> executingTasks) {
+        this.executingJobs = executingTasks;
     }
 
     // Method to get a view of the station
@@ -132,9 +132,9 @@ public class Station {
 
     // Method to update station status
     public void updateStationStatus() {
-        if (executingTasks.isEmpty() && waitingTasks.isEmpty()) {
+        if (executingJobs.isEmpty() && waitingJobs.isEmpty()) {
             status = "Idle";
-        } else if (waitingTasks.size() + executingTasks.size() >= maxCapacity) {
+        } else if (waitingJobs.size() + executingJobs.size() >= maxCapacity) {
             status = "Full"; // Update status to "Full" when at max capacity
         } else {
             status = "Busy";
@@ -147,13 +147,13 @@ public class Station {
             System.out.println("Station ID: " + station.getStationID());
             System.out.println("Status: " + station.getStatus());
             System.out.print("Executing Tasks: ");
-            for (Job executingJob : station.getExecutingTasks()) {
+            for (Job executingJob : station.getexecutingJobs()) {
                 System.out.print(executingJob.getJobID() + " "); // Print ID of each executing job
             }
             System.out.println(); // Add a newline after printing executing tasks
     
             System.out.print("Waiting Tasks: ");
-            for (Job waitingJob : station.getWaitingTasks()) {
+            for (Job waitingJob : station.getwaitingJobs()) {
                 System.out.print(waitingJob.getJobID() + " "); // Print ID of each waiting job
             }
             System.out.println(); // Add a newline after printing waiting tasks
@@ -165,8 +165,8 @@ public class Station {
 
     // Updated method to add a job to the station
     public void addJob(Job job) {
-        if (waitingTasks.size() + executingTasks.size() < maxCapacity) {
-            waitingTasks.add(job);
+        if (waitingJobs.size() + executingJobs.size() < maxCapacity) {
+            waitingJobs.add(job);
             updateStationStatus();
         } else {
             System.out.println("Station " + stationID + " is at full capacity.");
@@ -175,30 +175,30 @@ public class Station {
 
     // Method to start a job at the station
     public void startJob(Job job) {
-        if (executingTasks.size() < maxCapacity) {
-            executingTasks.add(job); // Add the job to the list of executing tasks
-            waitingTasks.remove(job); // Remove the job from the waiting list
+        if (executingJobs.size() < maxCapacity) {
+            executingJobs.add(job); // Add the job to the list of executing tasks
+            waitingJobs.remove(job); // Remove the job from the waiting list
             updateStationStatus();
         } else {
             System.out.println("Station " + stationID + " cannot start a new job as it is at full capacity.");
         }
     }
     public void addToExecute() {
-        if (!waitingTasks.isEmpty()) {
+        if (!waitingJobs.isEmpty()) {
             if (fifoflag) {
                 // FIFO flag is true, add jobs from the beginning of the waiting list
-                while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
-                    Job jobToExecute = waitingTasks.remove(0); // Remove the first job from waiting list
-                    executingTasks.add(jobToExecute); // Add the job to executing list
+                while (!waitingJobs.isEmpty() && executingJobs.size() < maxCapacity) {
+                    Job jobToExecute = waitingJobs.remove(0); // Remove the first job from waiting list
+                    executingJobs.add(jobToExecute); // Add the job to executing list
                     System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
                 }
             } else {
                 // FIFO flag is false, add jobs with the earliest deadlines
-                while (!waitingTasks.isEmpty() && executingTasks.size() < maxCapacity) {
+                while (!waitingJobs.isEmpty() && executingJobs.size() < maxCapacity) {
                     Job jobToExecute = findJobWithEarliestDeadline();
                     if (jobToExecute != null) {
-                        waitingTasks.remove(jobToExecute); // Remove the job from waiting list
-                        executingTasks.add(jobToExecute); // Add the job to executing list
+                        waitingJobs.remove(jobToExecute); // Remove the job from waiting list
+                        executingJobs.add(jobToExecute); // Add the job to executing list
                         System.out.println(jobToExecute.getJobID() + " added to execution list of station " + stationID);
                     } else {
                         System.out.println("No jobs in the waiting list of station " + stationID);
@@ -214,9 +214,9 @@ public class Station {
     
     // Method to find job with earliest deadline in waiting tasks
     private Job findJobWithEarliestDeadline() {
-        if (!waitingTasks.isEmpty()) {
-            Job earliestJob = waitingTasks.get(0);
-            for (Job job : waitingTasks) {
+        if (!waitingJobs.isEmpty()) {
+            Job earliestJob = waitingJobs.get(0);
+            for (Job job : waitingJobs) {
                 if (job.getDeadline() < earliestJob.getDeadline()) {
                     earliestJob = job;
                 }
@@ -229,7 +229,7 @@ public class Station {
     // Method to mark a job as completed at the station
 
     public void completeJob(Job job) {
-        executingTasks.remove(job);
+        executingJobs.remove(job);
         updateStationStatus();
     }
 
