@@ -129,7 +129,6 @@ public class Station {
         return view.toString();
     }
     
-
     // Method to update station status
     public void updateStationStatus() {
         if (executingJobs.isEmpty() && waitingJobs.isEmpty()) {
@@ -161,7 +160,50 @@ public class Station {
         }
     }
     
+    // Method to execute a task from a job
+    public void executeTasksForAllJobs() {
+        for (Job job : executingJobs) {
+            // Check if there are tasks to execute for the current job
+            if (job.getRemainingTasks() > 0) {
+                Task task = job.getNextTask(); // Get the next task to execute
+                double speed = getSpeedForTask(task); // Get the speed for the task
+                double size = task.getTaskSize(); // Get the size of the task
+                
+                // Calculate time to execute the task based on size and speed
+                double time = size / speed;
+
+                // Apply speed variability multiplier if available
+                double variability = speedVariabilityMultiplier.get(tasksCanBeDone.indexOf(task));
+                double minMultiplier = 1.0 - variability;
+                double maxMultiplier = 1.0 + variability;
+                double randomizedMultiplier = minMultiplier + Math.random() * (maxMultiplier - minMultiplier);
+                time *= randomizedMultiplier;
+
+                // Increment current time by the time taken to execute the task
+                currentTime += time;
+
+                // Remove the executed task from the job
+                job.completeTask();
+                
+                // Print execution details
+                System.out.println("Task " + task.getTaskID() + " executed at Station " + stationID + " in " + time + " units of time.");
+
+                // Update job status
+                job.updateStatus((int) currentTime);
+            } else {
+                System.out.println("No tasks remaining in the job " + job.getJobID() + " to execute.");
+            }
+        }
+    }
     
+    // Method to get speed for a task
+    private double getSpeedForTask(Task task) {
+        int index = tasksCanBeDone.indexOf(task);
+        if (index != -1) {
+            return speedForTask.get(index);
+        }
+        return 0; // Return 0 if speed is not found for the task
+    }
 
     // Updated method to add a job to the station
     public void addJob(Job job) {

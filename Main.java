@@ -98,16 +98,23 @@ public class Main {
             }
             System.out.println();
             System.out.println();
+            System.out.println("Job adding to execution list of station:");
+            for (Station station : stations) {
+                station.addToExecute();
+            }
+            for (Station station : stations) {
+            station.executeTasksForAllJobs();
+            }
 
             
             break; // TEMPORARY BREAK TO TEST
         }
-        System.out.println("Job adding to execution list of station:");
-        for (Station station : stations) {
-            station.addToExecute();
-        }
-        System.out.println();
+       
         System.out.println();
         Station.printStationStatus(stations);
+        
+        
+
+        
     }
 }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Job {
@@ -17,6 +18,7 @@ public class Job {
         this.startTime = startTime;
         this.deadline = startTime + duration;
         this.completed = false;
+        this.tasks = new ArrayList<>(); // Initialize the tasks list
     }
 
     public String toString() {
@@ -145,6 +147,25 @@ public class Job {
         } else {
             return Math.max(0, deadline - currentTime); // Zamanı geçen süre, eğer iş tamamlanmadıysa
         }
-
     }
+    public Task getNextTask() {
+        if (!tasks.isEmpty()) {
+            return tasks.remove(0); // Remove and return the first task from the list
+        } else {
+            return null; // Return null if there are no tasks remaining
+        }
+    }
+
+    // Method to mark the current task as completed
+    public void completeTask() {
+        if (!tasks.isEmpty()) {
+            tasks.remove(0); // Remove the first task from the list
+        }
+    }
+
+    // Method to get the number of remaining tasks in the job
+    public int getRemainingTasks() {
+        return tasks.size();
+    }
+
 }
