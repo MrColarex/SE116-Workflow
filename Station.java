@@ -175,6 +175,12 @@ public class Station {
                         break;
                     }
                 }
+                for (int i = 0; i < tasksCanBeDone.size(); i++) {
+                    if (tasksCanBeDone.get(i).getTaskID().equals(task.getTaskID())) {
+                        taskIndex = i;
+                        break;
+                    }
+                }
                 if (taskIndex != -1) { // Ensure the task is in the list
                     double variability = speedVariabilityMultiplier.get(taskIndex);
                     double minMultiplier = 1.0 - variability;

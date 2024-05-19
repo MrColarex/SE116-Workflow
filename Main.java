@@ -106,16 +106,13 @@ public class Main {
         for (Station station : stations) {
             station.addToExecute();
         }
+        for (Station station : stations) {
+            station.executeTasksForAllJobs();
+        }        
         System.out.println();
         System.out.println();
         Station.printStationStatus(stations);
-
-        DiscreteEventSimulation simulation = new DiscreteEventSimulation(stations);
-
-        // Schedule job start events
-        // Start the simulation
-        simulation.start(jobs);
+       
   }
-
 }
 
