@@ -62,7 +62,7 @@ public class Main {
         TaskAssignment.printJobStatus(jobs); // in taskAssignment class
 
         double mainCurrentTime = 0.0;
-        int testvariable = 0;
+
         while (true) {
             boolean allJobsCompleted = true; // Assume all jobs are completed initially
             for (Job job : jobs) {
@@ -77,7 +77,7 @@ public class Main {
                 break;
             }
 
-            // If we are still continuing, this means there are still jobs to be done. 
+            // If we are still continuing, this means there are still jobs to be done.
             // Now if we are at the beginning of the while loop, instantly go to starting time of earliest job.
             if (mainCurrentTime == 0) {
                 // Find the earliest time to start
@@ -92,27 +92,30 @@ public class Main {
                 // Assign jobs to stations if their startTime matches the current time
                 for (Job job : jobs) {
                     if (!job.isCompleted()) {
-                        TaskAssignment.assignStationToJob(job, stations, mainCurrentTime);
+                        TaskAssignment.assignStationToJob(job, stations, 10);
                     }
                 }
             }
             System.out.println();
             System.out.println();
-            System.out.println("Job adding to execution list of station:");
-            for (Station station : stations) {
-                station.addToExecute();
-            }
-            Station.printStationStatus(stations);
-            for (Station station : stations) {
-            station.executeTasksForAllJobs();
-            }
 
-            testvariable++;
-            if (testvariable==2 )break; // TEMPORARY BREAK TO TEST
+
+            break; // TEMPORARY BREAK TO TEST
         }
-        TaskAssignment.printJobStatus(jobs); // in taskAssignment class
-        System.out.println("Updated Job Details:");
-        Job.printJobDetails(jobs, stations);
-        System.out.println(mainCurrentTime);
-    }
+        System.out.println("Job adding to execution list of station:");
+        for (Station station : stations) {
+            station.addToExecute();
+        }
+        System.out.println();
+        System.out.println();
+        Station.printStationStatus(stations);
+
+        DiscreteEventSimulation simulation = new DiscreteEventSimulation(stations);
+
+        // Schedule job start events
+        // Start the simulation
+        simulation.start(jobs);
+  }
+
 }
+
